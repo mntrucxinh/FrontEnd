@@ -6,7 +6,13 @@ import { METHODS } from "@/constants/methods"
 
 export default function TeachingMethodsSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-white">
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="relative w-full overflow-hidden bg-white"
+    >
       {/* TOP scallop (full width) */}
       <div className="absolute top-0 left-0 right-0 w-screen h-16 pointer-events-none">
         <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="w-screen h-full block">
@@ -136,6 +142,6 @@ export default function TeachingMethodsSection() {
           />
         </motion.svg>
       </div>
-    </section>
+    </motion.section>
   )
 }

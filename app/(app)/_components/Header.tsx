@@ -39,7 +39,7 @@ const Header = () => {
             </a>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <span className="text-base font-semibold">Theo dõi</span>
             <a href="#" className="hover:opacity-90">
               <img
@@ -212,10 +212,10 @@ const Header = () => {
                             key={c.label}
                             href={c.href}
                             onClick={closeMobileMenu}
-                          className="block px-3 py-2 rounded-lg text-[14px] text-primary hover:text-primary/70 hover:bg-primary/5 transition-colors"
-                        >
-                          {c.label}
-                        </Link>
+                            className="block px-3 py-2 rounded-lg text-[14px] text-primary hover:text-primary/70 hover:bg-primary/5 transition-colors"
+                          >
+                            {c.label}
+                          </Link>
                         ))}
                       </div>
                     )}
