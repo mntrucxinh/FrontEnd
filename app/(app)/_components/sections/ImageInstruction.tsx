@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 const IMAGES = ["/assets/images/ex1.jpg", "/assets/images/ex2.jpg", "/assets/images/ex3.jpg"]
 
@@ -50,14 +51,16 @@ export default function ImageInstruction() {
             "
           >
             {/* back layer (far) */}
-            <img
-              src="/grass.png"
+            <Image
+              width={100} height={100}
+              src="/assets/images/grass.png"
               alt=""
               className="absolute inset-0 w-full h-full object-cover opacity-55 blur-[1.5px] scale-105"
             />
             {/* front layer (near) */}
-            <img
-              src="/grass.png"
+            <Image
+              width={100} height={100}
+              src="/assets/images/grass.png"
               alt=""
               className="absolute inset-0 w-full h-full object-cover opacity-95 scale-110"
             />

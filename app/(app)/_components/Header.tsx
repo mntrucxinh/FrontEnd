@@ -76,9 +76,10 @@ const Header = () => {
         <div className="container mx-auto px-4 h-16 lg:h-20 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 overflow-visible"><div className="w-[220px] lg:w-[300px] flex items-center overflow-visible">
-              <img
+              <Image
                 src={BRAND_ASSETS.logo}
-                alt="TrĂºc Xinh"
+                width={100} height={100}
+                alt="Trúc Xinh"
                 className="
                   h-10 lg:h-12 w-auto object-contain
                   origin-left

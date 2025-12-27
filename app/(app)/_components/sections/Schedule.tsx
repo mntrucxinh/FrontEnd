@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import Image from "next/image"
 
 type AgeKey = "2-3" | "3-4" | "4-5" | "5-6"
 
@@ -152,7 +153,8 @@ export default function ActivitiesAtSchool() {
 
       {/* Bottom light area + giraffe (optional) */}
       <div className="absolute bottom-0 left-0 right-0 h-28 bg-white/90" />
-      <img
+      <Image
+        width={100} height={100}
         src="/assets/images/giraffe.png"
         alt=""
         className="hidden md:block absolute bottom-0 right-10 w-24 opacity-90 pointer-events-none"

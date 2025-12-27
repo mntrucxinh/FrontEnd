@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Play, X } from "lucide-react"
+import Image from "next/image"
 
 type VideoItem = {
   id: string
@@ -186,7 +187,8 @@ export default function FeaturedActivities() {
                     className="relative w-full h-[210px] bg-slate-100"
                     aria-label={`Play ${v.title}`}
                   >
-                    <img
+                    <Image
+                      width={100} height={100}
                       src={v.thumbnail}
                       alt={v.title}
                       className="w-full h-full object-cover"
