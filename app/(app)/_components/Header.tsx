@@ -78,7 +78,7 @@ const Header = () => {
           <div className="flex items-center flex-shrink-0 overflow-visible"><div className="w-[220px] lg:w-[300px] flex items-center overflow-visible">
               <Image
                 src={BRAND_ASSETS.logo}
-                width={100} height={100}
+                width={200} height={200}
                 alt="Trúc Xinh"
                 className="
                   h-10 lg:h-12 w-auto object-contain
