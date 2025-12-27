@@ -2,9 +2,10 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { BRAND_ASSETS, CONTACT_INFO } from "@/assets/infomations"
+import { BRAND_ASSETS, CONTACT_INFO } from "@/constants/infomations"
 import { ChevronDown, Mail, Menu, Phone, X } from "lucide-react"
 import { NAV_ITEMS } from "@/constants/routes"
+import Image from "next/image"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -40,26 +41,29 @@ const Header = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <span className="text-base font-semibold">Theo dĂµi</span>
+            <span className="text-base font-semibold">Theo dõi</span>
             <a href="#" className="hover:opacity-90">
-              <img
+              <Image
+                width={32}
+                height={32}
                 src={BRAND_ASSETS.social.facebook}
                 alt="Facebook"
-                className="w-8 h-8"
               />
             </a>
             <a href="#" className="hover:opacity-90">
-              <img
+              <Image
+                width={32}
+                height={32}
                 src={BRAND_ASSETS.social.youtube}
                 alt="YouTube"
-                className="w-8 h-8"
               />
             </a>
             <a href="#" className="hover:opacity-90">
-              <img
+              <Image
+                width={32}
+                height={32}
                 src={BRAND_ASSETS.social.zalo}
                 alt="Zalo"
-                className="w-8 h-8"
               />
             </a>
           </div>

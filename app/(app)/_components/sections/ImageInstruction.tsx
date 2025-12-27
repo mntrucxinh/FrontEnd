@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const IMAGES = ["/ex1.jpg", "/ex2.jpg", "/ex3.jpg"]
+const IMAGES = ["/assets/images/ex1.jpg", "/assets/images/ex2.jpg", "/assets/images/ex3.jpg"]
 
 const sway = (delay = 0) => ({
   initial: { rotate: -2, y: 0 },
