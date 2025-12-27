@@ -40,7 +40,7 @@ const Header = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <span className="text-base font-semibold">Theo dĂµi</span>
+            <span className="text-base font-semibold">Theo dõi</span>
             <a href="#" className="hover:opacity-90">
               <img
                 src={BRAND_ASSETS.social.facebook}
@@ -71,19 +71,25 @@ const Header = () => {
         {/* main bar height fixed */}
         <div className="container mx-auto px-4 h-16 lg:h-20 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 overflow-visible"><div className="w-[220px] lg:w-[300px] flex items-center overflow-visible">
+          <Link
+            href="/"
+            className="flex items-center flex-shrink-0 overflow-visible"
+          >
+            <div className="w-[120px] lg:w-[170px] flex items-center overflow-visible">
               <img
                 src={BRAND_ASSETS.logo}
-                alt="TrĂºc Xinh"
+                alt="Trúc Xinh"
                 className="
                   h-10 lg:h-12 w-auto object-contain
                   origin-left
                   scale-[6] lg:scale-[5]
                   -translate-x-[100px] lg:-translate-x-[100px]
                   translate-y-[10px] lg:translate-y-[8px]
+                  [clip-path:inset(30%_20%_40%_25%)]
                 "
               />
-            </div></div>
+            </div>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-6 text-[15px] font-semibold text-primary">
@@ -102,13 +108,12 @@ const Header = () => {
 
               return (
                 <div key={item.label} className="relative group">
-                  <Link
-                    href={item.href}
-                    className="inline-flex items-center gap-1 hover:text-primary/70 transition-colors"
+                  <div
+                    className="inline-flex items-center gap-1 hover:text-primary/70 transition-colors cursor-pointer select-none"
                   >
                     {item.label}
                     <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
-                  </Link>
+                  </div>
 
                   {/* Dropdown */}
                   <div
@@ -157,7 +162,7 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile menu OVERLAY (khĂ´ng lĂ m header cao lĂªn) */}
+        {/* Mobile menu OVERLAY (không làm header cao lên) */}
         <div
           className={`lg:hidden absolute left-0 right-0 top-full bg-white shadow-lg border-t transform transition-all duration-300 ease-out origin-top ${
             isMenuOpen
