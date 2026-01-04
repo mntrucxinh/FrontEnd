@@ -11,7 +11,7 @@ const nextConfig = {
     // Không cho phép build thành công nếu có lỗi TypeScript
     ignoreBuildErrors: false,
   },
-  webpack(config) {
+  webpack: (config) => {
     // Lấy rule xử lý file SVG hiện có
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'))
 
