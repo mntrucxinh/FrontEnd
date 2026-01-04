@@ -1,22 +1,19 @@
+import Image from 'next/image'
 import { Avatar, Button, Popover, PopoverContent, PopoverTrigger, User } from '@heroui/react'
 import { ChevronDown } from 'lucide-react'
 
 export default function HeaderAdmin() {
   return (
-    <section className='mx-auto flex h-16 items-center justify-between bg-primary px-4'>
-      <Button
-        radius='sm'
-        className='flex h-12 items-center bg-transparent'
-        startContent={
-          <Avatar
-            className='bg-transparent'
-            size='lg'
-            src='/assets/images/logo_truc_xinh.png'
-            alt='Logo'
-          />
-        }
-      >
-        Trúc Xinh
+    <section className='bg-content2 mx-auto flex h-12 w-screen items-center justify-between px-2'>
+      <Button radius='sm' className='flex items-center bg-transparent'>
+        <Image
+          width={50}
+          height={50}
+          className='p-0'
+          src='/assets/images/logo_truc_xinh.png'
+          alt='Logo'
+        />
+        <p className='text-content1 text-xl font-semibold'>Quản Lý</p>
       </Button>
       <Popover showArrow placement='bottom-end'>
         <PopoverTrigger>

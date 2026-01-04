@@ -23,6 +23,8 @@ module.exports = {
     },
     extend: {
       colors: {
+        content1: 'var(--content1)',
+        content2: 'var(--content2)',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

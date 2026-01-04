@@ -1,3 +1,4 @@
 export enum EResources {
-  'post-management' = 1,
+  'news-management' = 1,
+  'announcements-management',
 }

@@ -25,3 +25,8 @@ export const normalizeRoutes = (
   })
   return extractedRoutes
 }
+
+export const normalizePath = (path: string) => {
+  if (path === '/') return path
+  return path.startsWith('/') ? path : `/${path}`
+}
