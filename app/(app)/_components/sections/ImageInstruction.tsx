@@ -2,77 +2,340 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import { ChevronRight, ArrowRight } from 'lucide-react'
 
 const IMAGES = ['/assets/images/ex1.jpg', '/assets/images/ex2.jpg', '/assets/images/ex3.jpg']
 
-const sway = (delay = 0) => ({
-  initial: { rotate: -2, y: 0 },
-  animate: {
-    rotate: [-2, 2, -2],
-    y: [0, -6, 0],
-    transition: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay },
-  },
-})
-
-const floaty = (delay = 0) => ({
-  initial: { y: 0 },
-  animate: {
-    y: [0, -10, 0],
-    transition: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay },
-  },
-})
-
 export default function ImageInstruction() {
+  const router = useRouter()
   const [index, setIndex] = useState(0)
   const [isInitial, setIsInitial] = useState(true)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
-  // Preload first image
   useEffect(() => {
+    if (typeof window === 'undefined') return
     const img = new window.Image()
     img.src = IMAGES[0]
   }, [])
 
   useEffect(() => {
     const id = setInterval(() => {
-      setIndex((p) => {
-        const nextIndex = (p + 1) % IMAGES.length
+      setIndex((prev) => {
+        const nextIndex = (prev + 1) % IMAGES.length
         if (isInitial) {
           setIsInitial(false)
         }
         return nextIndex
       })
     }, 5000)
+
     return () => clearInterval(id)
   }, [isInitial])
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+
   return (
-    <section className='relative flex w-full justify-center overflow-hidden bg-gradient-to-b from-white to-secondary px-6 py-10'>
-      {/* image box */}
-      <div className='relative z-10 h-[320px] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-xl ring-4 ring-emerald-500/70 sm:h-[380px] md:h-[450px]'>
-        <AnimatePresence mode='sync' initial={false}>
-          <motion.img
-            key={IMAGES[index]}
-            src={IMAGES[index]}
-            alt={`Slide ${index + 1}`}
-            className='absolute inset-0 size-full object-cover'
-            initial={isInitial ? false : { x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
+    <section className='relative min-h-screen overflow-hidden bg-gradient-to-br from-[#E8F5E9] via-white to-[#FFF3E0]'>
+      {/* Animated background with multiple layers */}
+      <div className='pointer-events-none absolute inset-0'>
+        {/* Floating orbs */}
+        <motion.div
+          className='absolute right-[10%] top-[20%] h-96 w-96 rounded-full bg-gradient-to-br from-[#33B54A]/20 to-[#33B54A]/5 blur-3xl'
+          animate={{
+            x: [0, 30, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className='absolute bottom-[15%] left-[10%] h-96 w-96 rounded-full bg-gradient-to-br from-[#F78F1E]/20 to-[#F78F1E]/5 blur-3xl'
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className='absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#33B54A]/10 to-[#F78F1E]/10 blur-3xl'
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+
+        {/* Animated particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className='absolute h-2 w-2 rounded-full bg-[#33B54A]/30'
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + (i % 3) * 20}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: 'easeInOut',
+            }}
           />
-        </AnimatePresence>
+        ))}
       </div>
 
-      {/* grass background */}
-      <div className='absolute bottom-0 left-0 z-0 h-[200px] w-full sm:h-[230px] md:h-[260px]'>
-        <Image
-          width={2000}
-          height={2000}
-          src='/assets/images/grass.png'
-          alt=''
-          className='h-full w-full object-cover object-bottom'
-        />
+      <div className='relative z-10 mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-32'>
+        <div className='grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center lg:gap-20'>
+          {/* Left: Content with enhanced animations */}
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 0.9,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+            className='space-y-8'
+          >
+            {/* Title with staggered animation */}
+            <div className='space-y-3'>
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.7 }}
+                className='text-5xl font-black leading-[1.1] tracking-tight text-gray-900 md:text-6xl lg:text-7xl'
+              >
+                Trường Mầm Non
+              </motion.h1>
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.7 }}
+                className='text-[#33B54A] text-5xl font-black leading-[1.1] tracking-tight md:text-6xl lg:text-7xl'
+              >
+                Trúc Xinh
+              </motion.h1>
+            </div>
+
+            {/* Description with word-by-word animation */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.7 }}
+              className='text-lg leading-relaxed text-gray-600 md:text-xl'
+            >
+              Môi trường học tập an toàn, thân thiện, giúp bé phát triển toàn diện về{' '}
+              <motion.span
+                className='font-bold text-[#F78F1E]'
+                whileHover={{ scale: 1.1, display: 'inline-block' }}
+              >
+                thể chất
+              </motion.span>
+              ,{' '}
+              <motion.span
+                className='font-bold text-[#33B54A]'
+                whileHover={{ scale: 1.1, display: 'inline-block' }}
+              >
+                trí tuệ
+              </motion.span>{' '}
+              và{' '}
+              <motion.span
+                className='font-bold text-[#F78F1E]'
+                whileHover={{ scale: 1.1, display: 'inline-block' }}
+              >
+                kỹ năng sống
+              </motion.span>{' '}
+              thông qua những hoạt động trải nghiệm phong phú mỗi ngày.
+            </motion.p>
+
+            {/* Enhanced CTA buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.7 }}
+              className='flex flex-nowrap items-center gap-3 pt-4 sm:gap-4'
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className='flex-shrink-0'>
+                <button
+                  onClick={() => router.push('/introduce/general')}
+                  className='group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#33B54A] px-6 py-5 text-base font-bold text-white shadow-xl shadow-[#33B54A]/30 transition-all duration-300 hover:bg-[#F78F1E] hover:shadow-[#F78F1E]/30 sm:px-10 sm:py-6 sm:text-lg sm:gap-3'
+                >
+                  <span className='relative z-10 flex items-center gap-2 whitespace-nowrap'>
+                    Tìm hiểu về trường
+                    <ArrowRight className='h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:translate-x-1' />
+                  </span>
+                </button>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className='flex-shrink-0'>
+                <button
+                  onClick={() => router.push('/notice')}
+                  className='group inline-flex items-center rounded-full bg-[#F78F1E] px-6 py-5 text-base font-bold text-white shadow-lg transition-all duration-300 hover:bg-[#33B54A] hover:shadow-xl sm:px-10 sm:py-6 sm:text-lg'
+                >
+                  <span className='whitespace-nowrap'>Thông báo tuyển sinh</span>
+                  <ChevronRight className='ml-2 h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:translate-x-1' />
+                </button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right: Advanced Image Slider with parallax */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 0.9,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+            className='relative'
+            style={{
+              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
+            }}
+          >
+            {/* Main slider with glassmorphism effect */}
+            <div className='relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl ring-1 ring-white/20'>
+              <AnimatePresence mode='wait' initial={false}>
+                <motion.div
+                  key={IMAGES[index]}
+                  initial={isInitial ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                  className='absolute inset-0'
+                >
+                  <Image
+                    src={IMAGES[index]}
+                    alt={`Slide ${index + 1}`}
+                    fill
+                    className='object-cover'
+                    priority={index === 0}
+                  />
+                  
+                  {/* Dynamic gradient overlay */}
+                  <motion.div
+                    className='absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent'
+                    animate={{
+                      opacity: [0.3, 0.4, 0.3],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Animated dots indicator */}
+              <div className='absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2.5'>
+                {IMAGES.map((_, i) => (
+                  <motion.button
+                    key={i}
+                    onClick={() => {
+                      setIndex(i)
+                      setIsInitial(false)
+                    }}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`rounded-full transition-all duration-300 ${
+                      i === index
+                        ? 'h-3 w-10 bg-white shadow-xl'
+                        : 'h-3 w-3 bg-white/60 hover:bg-white/80'
+                    }`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+            </div>
+
+            {/* Multiple decorative layers with animations */}
+            <motion.div
+              className='absolute -right-6 -top-6 -z-10 h-full w-full rounded-3xl bg-gradient-to-br from-[#33B54A]/15 to-[#F78F1E]/15 blur-3xl'
+              animate={{
+                scale: [1, 1.05, 1],
+                opacity: [0.6, 0.8, 0.6],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+            <motion.div
+              className='absolute -right-3 -top-3 -z-10 h-full w-full rounded-3xl bg-gradient-to-br from-[#33B54A]/10 to-[#F78F1E]/10 blur-2xl'
+              animate={{
+                scale: [1, 1.08, 1],
+                opacity: [0.4, 0.6, 0.4],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.5,
+              }}
+            />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Animated bottom wave */}
+      <div className='absolute bottom-0 left-0 right-0 h-40 overflow-hidden'>
+        <svg
+          viewBox='0 0 1440 160'
+          className='h-full w-full'
+          preserveAspectRatio='none'
+          fill='none'
+        >
+          <motion.path
+            d='M0,80 C240,40 480,120 720,80 C960,40 1200,120 1440,80 L1440,160 L0,160 Z'
+            fill='#E8F5E9'
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
+          />
+          <motion.path
+            d='M0,100 C240,60 480,140 720,100 C960,60 1200,140 1440,100 L1440,160 L0,160 Z'
+            fill='#C8E6C9'
+            fillOpacity='0.6'
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 2.5, delay: 0.2, ease: 'easeInOut' }}
+          />
+        </svg>
       </div>
     </section>
   )
