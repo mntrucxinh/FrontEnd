@@ -2,9 +2,9 @@
 
 import React, { useMemo, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CalendarDays, ChevronRight } from 'lucide-react'
+import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react'
 
 type Post = {
   id: string
@@ -17,9 +17,9 @@ type Post = {
 }
 
 export default function NoticeNewsGreen() {
+  const router = useRouter()
   const [tab, setTab] = useState<'notice' | 'news'>('notice')
 
-  // ✅ thay bằng data thật (API) sau
   const posts: Post[] = useMemo(
     () => [
       {
@@ -29,8 +29,8 @@ export default function NoticeNewsGreen() {
         excerpt:
           'Để chuẩn bị tốt cho năm học 2025-2026, nhà trường xin kính báo đến các bậc phụ huynh...',
         dateText: 'Thứ 5, 26/09/24 lúc 07:47',
-        image: '/assets/images/notice-cover.jpg',
-        href: '/thong-bao/1',
+        image: '/assets/images/notice-cover.png',
+        href: '/notice/thong-bao-cac-khoan-thu-dau-nam-hoc-2025-2026',
       },
       {
         id: '2',
@@ -39,8 +39,8 @@ export default function NoticeNewsGreen() {
         excerpt:
           'Căn cứ kế hoạch phát triển Giáo dục năm học 2025-2026 của Phòng Giáo dục-Đào tạo...',
         dateText: 'Thứ 5, 26/09/24 lúc 07:11',
-        image: '/assets/images/notice-cover.jpg',
-        href: '/thong-bao/2',
+        image: '/assets/images/notice-cover.png',
+        href: '/notice/thong-bao-tuyen-sinh-nam-hoc-2025-2026',
       },
       {
         id: '3',
@@ -49,8 +49,8 @@ export default function NoticeNewsGreen() {
         excerpt:
           'Một vài mẹo nhỏ giúp con thích nghi môi trường mới, kết nối bạn bè và vui học mỗi ngày...',
         dateText: 'Thứ 3, 10/10/24 lúc 09:20',
-        image: '/assets/images/news-cover.jpg',
-        href: '/tin-tuc/3',
+        image: '/assets/images/ex1.jpg',
+        href: '/news/detail/bi-quyet-giup-be-tu-tin-khi-den-lop',
       },
       {
         id: '4',
@@ -59,8 +59,8 @@ export default function NoticeNewsGreen() {
         excerpt:
           'Dinh dưỡng cân bằng là nền tảng để bé phát triển khỏe mạnh, vui vẻ và tràn đầy năng lượng...',
         dateText: 'Thứ 7, 12/10/24 lúc 08:05',
-        image: '/assets/images/news-cover.jpg',
-        href: '/tin-tuc/4',
+        image: '/assets/images/ex2.jpg',
+        href: '/news/detail/goi-y-thuc-don-dinh-duong-cho-be-mam-non',
       },
     ],
     []
@@ -71,146 +71,334 @@ export default function NoticeNewsGreen() {
   return (
     <motion.section
       id='notice'
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.65 }}
-      className='relative overflow-hidden bg-[#f4fbf7] py-16 md:py-24'
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.4, 0, 0.2, 1],
+        type: 'tween',
+      }}
+      className='relative overflow-hidden bg-gradient-to-b from-[#E8F5E9] via-white to-[#FFF3E0] py-20 md:py-28'
     >
-      {/* Decorative: dotted line */}
-      <div className='pointer-events-none absolute left-10 top-20 hidden opacity-60 md:block'>
-        <svg width='240' height='90' viewBox='0 0 240 90' fill='none'>
-          <path
-            d='M12 48 C 44 24, 78 72, 112 48 C 146 24, 180 72, 228 48'
-            stroke='#b7c7bf'
-            strokeWidth='2'
-            strokeDasharray='4 6'
-            strokeLinecap='round'
+      {/* Top wave */}
+      <div className='pointer-events-none absolute inset-x-0 top-0'>
+        <svg viewBox='0 0 1440 120' className='h-24 w-full' preserveAspectRatio='none'>
+          <motion.path
+            fill='#ffffff'
+            d='M0,96L60,85.3C120,75,240,53,360,58.7C480,64,600,96,720,106.7C840,117,960,107,1080,96C1200,85,1320,75,1380,69.3L1440,64L1440,0L0,0Z'
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
           />
         </svg>
       </div>
 
-      {/* Decorative giraffe corner (optional) */}
-      <Image
-        width={100}
-        height={100}
-        src='/assets/images/giraffe.png'
-        alt=''
-        className='pointer-events-none absolute -top-6 right-6 w-24 opacity-90'
-        onError={(e) => {
-          ;(e.currentTarget as HTMLImageElement).style.display = 'none'
-        }}
-      />
-
-      {/* Bottom clouds */}
-      <div className='pointer-events-none absolute inset-x-0 bottom-0'>
-        <svg viewBox='0 0 1440 140' className='h-[70px] w-full md:h-[90px]'>
-          <path
-            fill='#ffffff'
-            d='M0,96L60,85.3C120,75,240,53,360,58.7C480,64,600,96,720,106.7C840,117,960,107,1080,96C1200,85,1320,75,1380,69.3L1440,64L1440,140L0,140Z'
-          />
-        </svg>
+      {/* Subtle decorative elements */}
+      <div className='pointer-events-none absolute inset-0'>
+        <motion.div
+          className='absolute left-0 top-20 h-96 w-96 rounded-full bg-[#33B54A]/6 blur-3xl'
+          animate={{
+            scale: [1, 1.25, 1],
+            x: [0, 40, 0],
+            y: [0, 20, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className='absolute right-0 bottom-20 h-96 w-96 rounded-full bg-[#F78F1E]/6 blur-3xl'
+          animate={{
+            scale: [1, 1.35, 1],
+            x: [0, -40, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
       </div>
 
       <div className='container relative z-10 mx-auto px-4'>
         {/* Header */}
-        <div className='mx-auto max-w-3xl text-center'>
-          <h2 className='text-4xl font-extrabold tracking-wide text-primary md:text-5xl'>
-            Thông báo - Tin tức
-          </h2>
-          <p className='mt-3 text-slate-600'>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.7,
+            ease: [0.4, 0, 0.2, 1],
+            type: 'tween',
+          }}
+          className='mx-auto mb-16 max-w-3xl text-center'
+        >
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className='text-4xl font-black tracking-tight md:text-6xl'
+          >
+            <span className='text-[#33B54A]'>Thông báo </span>
+            <span className='text-[#F78F1E]'>
+              - Tin tức
+            </span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='mt-5 text-lg leading-relaxed text-gray-600 md:text-xl'
+          >
             Thông báo của nhà trường, tin tức tổng hợp về giáo dục, y tế học đường và các phương
             pháp nuôi dạy trẻ.
-          </p>
+          </motion.p>
 
           {/* Tabs */}
-          <div className='mt-8 flex items-center justify-center gap-4'>
-            <button
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className='relative mt-12 flex items-center justify-center gap-4'
+          >
+            <motion.button
               type='button'
               onClick={() => setTab('notice')}
-              className={`rounded-xl border px-8 py-3 font-bold transition ${
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 25,
+              }}
+              className={`relative overflow-hidden rounded-full px-8 py-3.5 text-base font-black transition-all duration-300 ease-out ${
                 tab === 'notice'
-                  ? 'border-primary bg-primary text-white shadow-lg'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-              } `}
+                  ? 'shadow-lg'
+                  : 'border-2 border-gray-200 bg-white hover:border-[#33B54A]/50 hover:bg-[#33B54A]/5'
+              }`}
             >
-              Thông báo
-            </button>
+              {tab === 'notice' && (
+                <motion.div
+                  layoutId='activeTab'
+                  className='absolute inset-0 rounded-full bg-[#33B54A] shadow-lg'
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                />
+              )}
+              <span className={`relative z-10 ${tab === 'notice' ? 'text-white' : 'text-gray-700'}`}>
+                Thông báo
+              </span>
+            </motion.button>
 
-            <button
+            <motion.button
               type='button'
               onClick={() => setTab('news')}
-              className={`rounded-xl border px-8 py-3 font-bold transition ${
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 25,
+              }}
+              className={`relative overflow-hidden rounded-full px-8 py-3.5 text-base font-black transition-all duration-300 ease-out ${
                 tab === 'news'
-                  ? 'border-primary bg-primary text-white shadow-lg'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-              } `}
+                  ? 'shadow-lg'
+                  : 'border-2 border-gray-200 bg-white hover:border-[#F78F1E]/50 hover:bg-[#F78F1E]/5'
+              }`}
             >
-              Tin tức
-            </button>
-          </div>
-        </div>
+              {tab === 'news' && (
+                <motion.div
+                  layoutId='activeTab'
+                  className='absolute inset-0 rounded-full bg-[#F78F1E] shadow-lg'
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                />
+              )}
+              <span className={`relative z-10 ${tab === 'news' ? 'text-white' : 'text-gray-700'}`}>
+                Tin tức
+              </span>
+            </motion.button>
+          </motion.div>
+        </motion.div>
 
         {/* Cards */}
-        <div className='mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2'>
+        <div className='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 items-stretch'>
           <AnimatePresence mode='popLayout'>
-            {filtered.map((post) => (
+            {filtered.map((post, index) => (
               <motion.article
                 key={post.id}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 18 }}
-                transition={{ duration: 0.25 }}
-                className='group overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl'
+                layout
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: [0.4, 0, 0.2, 1],
+                  type: 'tween',
+                }}
+                whileHover={{ y: -8, scale: 1.01 }}
+                className='group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-md ring-1 ring-gray-100/50 transition-all duration-300 ease-out hover:shadow-xl hover:ring-[#33B54A]/30 gpu-accelerate'
               >
-                {/* image */}
-                <div className='relative h-[240px] overflow-hidden bg-slate-100'>
-                  <Image
-                    width={100}
-                    height={100}
-                    src={post.image}
-                    alt={post.title}
-                    className='size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-                  />
-                  {/* subtle green overlay */}
-                  <div className='absolute inset-0 bg-primary/10 opacity-0 transition group-hover:opacity-100' />
-                </div>
+                {/* Image */}
+                <button
+                  onClick={() => router.push(post.href)}
+                  className='relative block h-[260px] w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 md:h-[280px]'
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.08 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                    className='relative h-full w-full'
+                  >
+                    <Image
+                      width={600}
+                      height={280}
+                      src={post.image}
+                      alt={post.title}
+                      className='size-full object-cover'
+                      priority={index < 2}
+                    />
+                  </motion.div>
 
-                {/* content */}
-                <div className='p-6'>
-                  <div className='flex items-center gap-2 text-sm text-slate-500'>
-                    <CalendarDays className='size-4' />
-                    <span>Ngày đăng: {post.dateText}</span>
-                  </div>
+                  {/* Gradient overlay */}
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent' />
 
-                  <h3 className='mt-3 line-clamp-2 text-xl font-extrabold leading-snug text-primary'>
-                    {post.title}
-                  </h3>
+                  {/* Type badge */}
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      delay: index * 0.1 + 0.3,
+                      type: 'spring',
+                      stiffness: 300,
+                    }}
+                    className={`absolute left-5 top-5 z-10 rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-lg backdrop-blur-md ${
+                      post.type === 'notice'
+                        ? 'bg-[#33B54A]'
+                        : 'bg-[#F78F1E]'
+                    }`}
+                  >
+                    <span className='flex items-center gap-1.5'>
+                      <Sparkles className='size-3' />
+                      {post.type === 'notice' ? 'Thông báo' : 'Tin tức'}
+                    </span>
+                  </motion.div>
+                </button>
 
-                  <p className='mt-3 line-clamp-2 leading-relaxed text-slate-600'>{post.excerpt}</p>
+                {/* Content */}
+                <div className='relative flex flex-1 flex-col p-6 md:p-7'>
+                  {/* Date */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 + 0.4 }}
+                    className='mb-4 flex items-center gap-2 text-xs text-gray-500 md:text-sm'
+                  >
+                    <CalendarDays className={`size-3.5 md:size-4 ${
+                      post.type === 'news' ? 'text-[#F78F1E]' : 'text-[#33B54A]'
+                    }`} />
+                    <span className='font-medium'>{post.dateText}</span>
+                  </motion.div>
 
-                  <div className='mt-5'>
-                    <Link
-                      href={post.href}
-                      className='inline-flex items-center gap-2 font-semibold text-primary hover:opacity-90'
+                  {/* Title */}
+                  <button
+                    onClick={() => router.push(post.href)}
+                    className='text-left w-full'
+                  >
+                    <motion.h3
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 + 0.5 }}
+                      className={`mb-3 line-clamp-2 text-lg font-black leading-snug text-gray-900 transition-colors duration-300 md:text-xl ${
+                        post.type === 'news' ? 'group-hover:text-[#F78F1E]' : 'group-hover:text-[#33B54A]'
+                      }`}
                     >
-                      Xem chi tiết <ChevronRight className='size-4' />
-                    </Link>
-                  </div>
+                      {post.title}
+                    </motion.h3>
+                  </button>
+
+                  {/* Excerpt */}
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.6 }}
+                    className='mb-5 line-clamp-2 text-sm leading-relaxed text-gray-600 md:text-base'
+                  >
+                    {post.excerpt}
+                  </motion.p>
+
+                  {/* CTA Link */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 + 0.7 }}
+                    className='mt-auto'
+                  >
+                    <button
+                      onClick={() => router.push(post.href)}
+                      className={`group/link inline-flex items-center gap-1.5 text-sm font-bold transition-all duration-300 md:text-base md:font-black ${
+                        post.type === 'news'
+                          ? 'text-[#F78F1E] hover:text-[#33B54A]'
+                          : 'text-[#33B54A] hover:text-[#F78F1E]'
+                      }`}
+                    >
+                      <span>Xem chi tiết</span>
+                      <ChevronRight className='size-4 transition-transform group-hover/link:translate-x-1' />
+                    </button>
+                  </motion.div>
                 </div>
               </motion.article>
             ))}
           </AnimatePresence>
         </div>
 
-        {/* Optional: View all */}
-        <div className='mt-10 flex justify-center'>
-          <Link
-            href={tab === 'notice' ? '/thong-bao' : '/tin-tuc'}
-            className='inline-flex items-center justify-center rounded-full border border-primary/30 bg-white px-8 py-3 font-bold text-primary shadow-sm transition hover:bg-primary/5'
-          >
-            Xem tất cả <ChevronRight className='ml-2 size-4' />
-          </Link>
-        </div>
+        {/* View all button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className='mt-12 flex justify-center md:mt-16'
+        >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <button
+              onClick={() => router.push(tab === 'notice' ? '/notice' : '/news')}
+              className={`group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-base font-black text-white shadow-lg transition-all duration-300 hover:shadow-xl md:px-10 md:py-4 ${
+                tab === 'news'
+                  ? 'bg-[#F78F1E] hover:bg-[#E67E17] hover:shadow-[#F78F1E]/30'
+                  : 'bg-[#33B54A] hover:bg-[#2EA043] hover:shadow-[#33B54A]/30'
+              }`}
+            >
+              <span>Xem tất cả</span>
+              <motion.div
+                animate={{ x: [0, 3, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <ChevronRight className='size-5' />
+              </motion.div>
+            </button>
+          </motion.div>
+        </motion.div>
       </div>
     </motion.section>
   )

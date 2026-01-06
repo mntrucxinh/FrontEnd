@@ -4,29 +4,35 @@
 
 @layer base {
   :root {
-    --background: 140 40% 97%;
+    /* Brand palette được tinh chỉnh theo màu logo Trúc Xinh:
+       - Xanh lá tươi làm màu chủ đạo
+       - Cam đậm làm màu nhấn
+    */
+    --background: 138 42% 97%;
     --foreground: 152 32% 16%;
 
-    --muted: 140 30% 94%;
+    --muted: 138 32% 94%;
     --muted-foreground: 150 22% 34%;
 
-    --popover: 140 40% 97%;
+    --popover: 138 42% 97%;
     --popover-foreground: 152 32% 16%;
 
-    --border: 138 24% 85%;
-    --input: 138 24% 85%;
+    --border: 138 26% 84%;
+    --input: 138 26% 84%;
 
-    --card: 140 40% 98%;
+    --card: 138 42% 98%;
     --card-foreground: 152 32% 16%;
 
-    --primary: 149 45% 34%;
+    /* Brand green từ logo #33B54A */
+    --primary: 138 72% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 143 38% 90%;
-    --secondary-foreground: 149 45% 28%;
+    --secondary: 138 55% 92%;
+    --secondary-foreground: 138 65% 30%;
 
-    --accent: 148 50% 88%;
-    --accent-foreground: 152 32% 18%;
+    /* Brand orange từ logo #F78F1E */
+    --accent: 27 96% 54%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -37,25 +43,25 @@
   }
 
   .dark {
-    --background: 149 44% 10%;
+    --background: 144 48% 10%;
     --foreground: 144 45% 92%;
 
     --muted: 152 32% 16%;
     --muted-foreground: 144 35% 78%;
 
-    --accent: 151 34% 20%;
-    --accent-foreground: 144 45% 92%;
+    --accent: 27 96% 54%;
+    --accent-foreground: 149 44% 10%;
 
-    --popover: 149 44% 10%;
+    --popover: 144 48% 10%;
     --popover-foreground: 144 45% 92%;
 
     --border: 151 24% 26%;
     --input: 151 24% 26%;
 
-    --card: 149 44% 12%;
+    --card: 144 48% 12%;
     --card-foreground: 144 45% 92%;
 
-    --primary: 144 52% 65%;
+    --primary: 138 72% 52%;
     --primary-foreground: 149 44% 10%;
 
     --secondary: 152 30% 22%;
@@ -89,11 +95,27 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* Optimize rendering */
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Smooth transitions for all interactive elements */
+  a, button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -127,4 +149,62 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
+}
+
+/* Smooth animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth hover transitions */
+.smooth-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smooth-hover:hover {
+  transform: translateY(-4px);
 }
