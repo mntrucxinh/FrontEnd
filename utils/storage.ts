@@ -3,6 +3,7 @@
 import Cookies from "js-cookie"
 
 export const getAccessToken = () => {
+  if (typeof document === "undefined") return undefined
   // Try cookie first, then localStorage as fallback
   const cookieToken = Cookies.get("accessToken")
   if (cookieToken) return cookieToken
@@ -17,6 +18,7 @@ export const getAccessToken = () => {
 }
 
 export const getRefreshToken = () => {
+  if (typeof document === "undefined") return undefined
   const cookieToken = Cookies.get("refreshToken")
   if (cookieToken) return cookieToken
 
@@ -29,6 +31,7 @@ export const getRefreshToken = () => {
 }
 
 export const setAccessToken = (token: string) => {
+  if (typeof document === "undefined") return
   // Set in both cookie and localStorage for better compatibility
   Cookies.set("accessToken", token, {
     expires: 7,
@@ -43,6 +46,7 @@ export const setAccessToken = (token: string) => {
 }
 
 export const setRefreshToken = (token: string) => {
+  if (typeof document === "undefined") return
   Cookies.set("refreshToken", token, {
     expires: 30,
     path: "/",
@@ -59,6 +63,8 @@ export const clearTokens = () => {
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
   }
-  Cookies.remove("accessToken", { path: "/" })
-  Cookies.remove("refreshToken", { path: "/" })
+  if (typeof document !== "undefined") {
+    Cookies.remove("accessToken", { path: "/" })
+    Cookies.remove("refreshToken", { path: "/" })
+  }
 }
