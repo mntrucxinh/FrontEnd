@@ -6,7 +6,7 @@ import { Chip } from '@heroui/react'
 import CustomTable from '@/components/CustomTable'
 import type { CustomTableProps } from '@/components/CustomTable'
 
-import { MOCK_NEWS, type NewsItem } from './../mock-data'
+import { MOCK_NEWS, type NewsItem } from '../mock-data'
 
 const columns = [
   { uid: 'title', name: 'Tiêu đề', sortable: true },
