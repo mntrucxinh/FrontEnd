@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import type { TPaginationResponse } from '@/validators/index'
 import { Chip } from '@heroui/react'
 
@@ -40,7 +41,14 @@ export default function NewsManagementTable() {
   const renderCell: CustomTableProps<NewsItem>['renderCell'] = (item, columnKey) => {
     switch (columnKey) {
       case 'title':
-        return <div className='font-medium'>{item.title}</div>
+        return (
+          <Link
+            href={`/admin/news-management/id=${item.id}`}
+            className='font-medium underline hover:text-primary'
+          >
+            {item.title}
+          </Link>
+        )
 
       case 'status':
         return statusChip(item.status)
@@ -61,10 +69,7 @@ export default function NewsManagementTable() {
       <CustomTable<NewsItem>
         tableClassNames={{
           tr: 'h-14',
-          th: [
-            'text-primary text-md bg-white',
-            'last:[border-start-end-radius:0px]',
-          ].join(' '),
+          th: ['text-primary text-md bg-white', 'last:[border-start-end-radius:0px]'].join(' '),
           wrapper: 'h-[520px] p-0',
         }}
         selectionMode='none'
