@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { noticeData } from './mock'
+import { noticeData } from '../mock'
 import { Calendar, ChevronRight, Search, Bell } from 'lucide-react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -21,57 +21,57 @@ const getTypeLabel = (type: string) => {
   return labels[type] || 'Thông báo'
 }
 
-const NoticePage = () => {
-  const searchParams = useSearchParams()
-  const type = searchParams.get('type') || 'general'
-  const [currentPage, setCurrentPage] = useState(1)
-  const [searchQuery, setSearchQuery] = useState('')
+export default function SearchNotice() {
+    const searchParams = useSearchParams()
+    const type = searchParams.get('type') || 'general'
+    const [currentPage, setCurrentPage] = useState(1)
+    const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [type, searchQuery])
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [type, searchQuery])
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [currentPage, type, searchQuery])
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [currentPage, type, searchQuery])
 
-  const parseDate = (dateString: string | undefined) => {
-    if (!dateString) return new Date(0)
-    const parts = dateString.split(', ')[1]?.split('/') || []
-    if (parts.length !== 3) return new Date(0)
-    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`)
-  }
-
-  const filteredNotices = useMemo(() => {
-    return noticeData
-      .filter((notice) => {
-        const typeMatch = notice.type === type
-        if (!searchQuery) return typeMatch
-
-        const searchMatch =
-          notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          notice.shortDescription?.toLowerCase().includes(searchQuery.toLowerCase())
-
-        return typeMatch && searchMatch
-      })
-      .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime())
-  }, [type, searchQuery])
-
-  const totalPages = Math.ceil(filteredNotices.length / ITEMS_PER_PAGE)
-
-  const paginatedNotices = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const endIndex = startIndex + ITEMS_PER_PAGE
-    return filteredNotices.slice(startIndex, endIndex)
-  }, [filteredNotices, currentPage])
-
-  const handlePageChange = (page: number) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page)
+    const parseDate = (dateString: string | undefined) => {
+        if (!dateString) return new Date(0)
+        const parts = dateString.split(', ')[1]?.split('/') || []
+        if (parts.length !== 3) return new Date(0)
+        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`)
     }
-  }
 
-  return (
+    const filteredNotices = useMemo(() => {
+        return noticeData
+        .filter((notice) => {
+            const typeMatch = notice.type === type
+            if (!searchQuery) return typeMatch
+
+            const searchMatch =
+            notice.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            notice.shortDescription?.toLowerCase().includes(searchQuery.toLowerCase())
+
+            return typeMatch && searchMatch
+        })
+        .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime())
+    }, [type, searchQuery])
+
+    const totalPages = Math.ceil(filteredNotices.length / ITEMS_PER_PAGE)
+
+    const paginatedNotices = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+        const endIndex = startIndex + ITEMS_PER_PAGE
+        return filteredNotices.slice(startIndex, endIndex)
+    }, [filteredNotices, currentPage])
+
+    const handlePageChange = (page: number) => {
+        if (page > 0 && page <= totalPages) {
+        setCurrentPage(page)
+        }
+    }
+
+    return (
     <div className='space-y-8'>
       {/* Header Section */}
       <motion.div
@@ -113,7 +113,7 @@ const NoticePage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch'
           >
             {paginatedNotices.map((notice, index) => (
               <motion.div
@@ -128,7 +128,7 @@ const NoticePage = () => {
                   damping: 20,
                 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className='group relative bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl ring-1 ring-gray-200/50'
+                className='group relative flex h-full min-h-[430px] flex-col bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl ring-1 ring-gray-200/50'
               >
                 <Link href={`/notice/${notice.slug}`}>
                   <div className='relative h-48 overflow-hidden bg-gray-100'>
@@ -158,25 +158,29 @@ const NoticePage = () => {
                   </div>
                 </Link>
 
-                <div className='p-6'>
-                  <h2 className='text-lg font-black text-gray-900 mb-2 line-clamp-2 group-hover:text-[#33B54A] transition-colors duration-300'>
+                <div className='flex flex-1 flex-col p-6'>
+                  <h2 className='text-lg font-black text-gray-900 mb-2 line-clamp-2 min-h-[56px] group-hover:text-[#33B54A] transition-colors duration-300'>
                     <Link href={`/notice/${notice.slug}`}>
                       {notice.title || 'Thông báo'}
                     </Link>
                   </h2>
-                  {notice.shortDescription && (
-                    <p className='text-gray-600 mb-4 line-clamp-2 text-sm leading-relaxed'>
-                      {notice.shortDescription}
-                    </p>
-                  )}
+                  <div className='min-h-[48px] mb-4'>
+                    {notice.shortDescription && (
+                      <p className='text-gray-600 line-clamp-2 text-sm leading-relaxed'>
+                        {notice.shortDescription}
+                      </p>
+                    )}
+                  </div>
 
-                  <Link
-                    href={`/notice/${notice.slug}`}
-                    className='inline-flex items-center gap-2 text-sm font-bold text-[#33B54A] hover:text-[#F78F1E] transition-colors duration-300'
-                  >
-                    Xem chi tiết
-                    <ChevronRight className='w-4 h-4 transition-transform group-hover:translate-x-1' />
-                  </Link>
+                  <div className='mt-auto'>
+                    <Link
+                      href={`/notice/${notice.slug}`}
+                      className='inline-flex items-center gap-2 text-sm font-bold text-[#33B54A] hover:text-[#F78F1E] transition-colors duration-300'
+                    >
+                      Xem chi tiết
+                      <ChevronRight className='w-4 h-4 transition-transform group-hover:translate-x-1' />
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -249,5 +253,3 @@ const NoticePage = () => {
     </div>
   )
 }
-
-export default NoticePage;
