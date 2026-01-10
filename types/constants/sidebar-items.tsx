@@ -1,4 +1,4 @@
-import { Bell, Newspaper } from 'lucide-react'
+import { Album, Bell, Newspaper } from 'lucide-react'
 
 import { APP_ROUTES } from '@/config/routes'
 
@@ -16,13 +16,17 @@ export const MAIN_SIDEBAR_ITEMS: SidebarItem[] = [
     label: 'Quản lý tin tức',
     icon: <Newspaper className='size-5' />,
     path: APP_ROUTES.RESOURCES.NEWS_MANAGEMENT,
-    role: '3',
   },
   // 2> Quản lý thông báo
   {
     label: 'Quản lý thông báo',
     icon: <Bell className='size-5' />,
     path: APP_ROUTES.RESOURCES.ANNOUNCEMENTS_MANAGEMENT,
-    role: '3',
+  },
+  // 3> Quản lý album
+  {
+    label: 'Quản lý ảnh & video',
+    icon: <Album className='size-5' />,
+    path: APP_ROUTES.RESOURCES.ALBUM_MANAGEMENT,
   },
 ]
