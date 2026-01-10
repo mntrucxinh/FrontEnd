@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
 import { useCreateAdminNews, useUpdateAdminNews } from '@/hook/admin-news/use-admin-news-mutation'
 import {
   addToast,
@@ -326,15 +327,16 @@ const ModalCreateEditNews = ({
                             {file.type.startsWith('video') ? (
                               <video
                                 src={previewUrls[index]}
-                                className='h-full w-full object-cover'
+                                className='size-full object-cover'
                                 controls
                               />
                             ) : (
-                              <img
+                              <Image
                                 src={previewUrls[index]}
                                 alt='preview'
-                                className='h-full w-full object-cover'
+                                className='size-full object-cover'
                                 loading='lazy'
+                                fill
                               />
                             )}
 
@@ -343,7 +345,7 @@ const ModalCreateEditNews = ({
                               isIconOnly
                               color='danger'
                               radius='full'
-                              className='absolute right-2 top-2 h-6 w-6 min-w-0'
+                              className='absolute right-2 top-2 size-6 min-w-0'
                             >
                               <X className='size-4 text-white' />
                             </Button>
