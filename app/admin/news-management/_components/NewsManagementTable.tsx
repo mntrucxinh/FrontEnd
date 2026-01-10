@@ -43,7 +43,7 @@ export default function NewsManagementTable() {
       case 'title':
         return (
           <Link
-            href={`/admin/news-management/id=${item.id}`}
+            href={`/admin/news-management/${item.id}`}
             className='font-medium underline hover:text-primary'
           >
             {item.title}
