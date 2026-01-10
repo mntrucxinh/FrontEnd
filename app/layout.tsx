@@ -4,10 +4,10 @@ import { Metadata, Viewport } from 'next'
 import { HeroUIProvider } from '@heroui/react'
 import { Toaster } from 'react-hot-toast'
 
+import AppThemeProvider from '@/config/providers/theme-provider'
 import { siteConfig } from '@/config/site'
 import { fontSans } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
-import { ThemeProvider } from '@/components/theme-provider'
 import Providers from '@/app/provider'
 import PushSubscriptionManager from '@/components/PushSubscriptionManager'
 
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang='en' suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
         <Toaster />
-        <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false}>
+        <AppThemeProvider>
           <HeroUIProvider>
             <div className='relative flex min-h-screen flex-col'>
               <div className='flex-1'>
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
             </div>
           </HeroUIProvider>
-        </ThemeProvider>
+        </AppThemeProvider>
       </body>
     </html>
   )
