@@ -3,17 +3,17 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useQueryClient } from '@tanstack/react-query'
+import { useDeleteAdminNews } from '@/hook/admin-news/use-admin-news-mutation'
+import { useAdminNewsList } from '@/hook/admin-news/use-admin-news-query'
+import type { TPaginationResponse } from '@/validators/index'
 import { addToast, Button, Chip } from '@heroui/react'
+import { useQueryClient } from '@tanstack/react-query'
 import { Pencil, Trash2 } from 'lucide-react'
 
+import type { AdminNewsResponse, AdminNewsStatus } from '@/types/admin-news'
 import ConfirmModal from '@/components/ConfirmModal'
 import CustomTable from '@/components/CustomTable'
 import type { CustomTableProps } from '@/components/CustomTable'
-import { useDeleteAdminNews } from '@/hook/admin-news/use-admin-news-mutation'
-import { useAdminNewsList } from '@/hook/admin-news/use-admin-news-query'
-import type { AdminNewsResponse, AdminNewsStatus } from '@/types/admin-news'
-import type { TPaginationResponse } from '@/validators/index'
 
 import ModalCreateEditNews from './ModalCreateEditNews'
 
@@ -107,7 +107,10 @@ export default function NewsManagementTable() {
     switch (columnKey) {
       case 'title':
         return (
-          <Link href={`/admin/news-management/${item.id}`} className='font-medium text-primary'>
+          <Link
+            href={`/admin/news-management/${item.id}`}
+            className='font-medium underline hover:text-primary'
+          >
             {item.title}
           </Link>
         )
@@ -166,10 +169,7 @@ export default function NewsManagementTable() {
       <CustomTable<AdminNewsResponse>
         tableClassNames={{
           tr: 'h-14',
-          th: [
-            'text-primary text-md bg-white',
-            'last:[border-start-end-radius:0px]',
-          ].join(' '),
+          th: ['text-primary text-md bg-white', 'last:[border-start-end-radius:0px]'].join(' '),
           wrapper: 'h-[520px] p-0',
         }}
         selectionMode='none'
