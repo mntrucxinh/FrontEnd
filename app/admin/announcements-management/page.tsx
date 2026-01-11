@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Quản lý thông báo',
 }
 
-const AnnouncementManagementPage = dynamic(() => import('./_components/AnnouncementManagement'), {
+const AnnouncementManagement = dynamic(() => import('./_components/AnnouncementManagement'), {
   ssr: false,
   loading: () => <div>Đang tải dữ liệu...</div>,
 })
@@ -13,7 +13,7 @@ const AnnouncementManagementPage = dynamic(() => import('./_components/Announcem
 export default function AnnouncementsManagementPage() {
   return (
     <section>
-      <AnnouncementManagementPage />
+      <AnnouncementManagement />
     </section>
   )
 }

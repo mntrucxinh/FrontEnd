@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
+import { useCreateAdminNews, useUpdateAdminNews } from '@/hook/admin-news/use-admin-news-mutation'
 import {
   addToast,
   Button,
@@ -13,19 +15,14 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Upload, X, FileText } from 'lucide-react'
-import Image from 'next/image'
 import { buildAssetUrl } from '@/utils/api-url'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useQueryClient } from '@tanstack/react-query'
 
 import CustomInput from '../../../../components/CustomInput'
 import CustomSelect from '../../../../components/CustomSelect'
 import CustomTextArea from '../../../../components/CustomTextArea'
-import {
-  useCreateAdminNews,
-  useUpdateAdminNews,
-} from '@/hook/admin-news/use-admin-news-mutation'
+import { useQueryClient } from '@tanstack/react-query'
 
 // ========== ZOD SCHEMA ==========
 const CreateEditNewsSchema = z.object({
@@ -60,7 +57,7 @@ interface ModalCreateEditNewsProps {
       position: number
       caption?: string | null
       asset: {
-        id: number
+        id: number | string
         public_id: string
         url: string
         mime_type: string
