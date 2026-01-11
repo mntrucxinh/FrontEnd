@@ -97,7 +97,10 @@ export default function AlbumManagementTable({
     switch (columnKey) {
       case 'id':
         return (
-          <Link href={`/admin/album-management/${item.id}`} className='px-0 text-primary'>
+          <Link
+            href={`/admin/album-management/${item.id}`}
+            className='px-0 underline hover:text-primary'
+          >
             {item.id}
           </Link>
         )
