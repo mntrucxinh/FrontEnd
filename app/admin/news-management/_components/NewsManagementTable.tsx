@@ -172,6 +172,7 @@ export default function NewsManagementTable() {
           th: ['text-primary text-md bg-white', 'last:[border-start-end-radius:0px]'].join(' '),
           wrapper: 'h-[520px] p-0',
         }}
+        hideTopContent
         selectionMode='none'
         columns={columns}
         data={data?.items ?? []}

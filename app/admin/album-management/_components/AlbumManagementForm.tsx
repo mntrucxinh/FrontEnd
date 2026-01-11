@@ -1,213 +1,94 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import type { TPaginationResponse } from '@/validators'
-import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react'
-import { Eye, Image as ImageIcon, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react'
 
-import ConfirmModal from '@/components/ConfirmModal'
-import CustomTable from '@/components/CustomTable'
-
-type AlbumItem = {
-  id: number | string
-  name: string
-  totalFiles: number
-  publishedAt: string // ISO string
-}
-
-const formatDateFallback = (iso: string) => {
-  try {
-    const d = new Date(iso)
-    return new Intl.DateTimeFormat('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(d)
-  } catch {
-    return '—'
-  }
-}
+import AlbumManagementFilter from '../_components/AlbumManagementFilter'
+import AlbumManagementTable, { type Album } from '../_components/AlbumManagementTable'
+import ModalCreateEditAlbum from '../_components/ModalCreateEditAlbum'
+import { mockAlbumListResponse } from '../mock-data'
 
 export default function AlbumManagementForm() {
-  const router = useRouter()
+  const rawData: Album[] = mockAlbumListResponse.items
 
-  const data: AlbumItem[] = useMemo(
-    () => [
-      { id: 1, name: 'Trung thu 2025', totalFiles: 56, publishedAt: '2025-09-17T10:20:00.000Z' },
-      {
-        id: 2,
-        name: 'Hoạt động ngoài trời',
-        totalFiles: 34,
-        publishedAt: '2025-08-03T08:00:00.000Z',
-      },
-      { id: 3, name: 'Bé vào lớp', totalFiles: 18, publishedAt: '2025-07-12T03:40:00.000Z' },
-    ],
-    []
-  )
+  const [search, setSearch] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [albumEdit, setAlbumEdit] = useState<Album | null>(null)
+
+  const filteredData = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    if (!q) return rawData
+    return rawData.filter((a) => {
+      const idMatch = String(a.id).toLowerCase().includes(q)
+      const titleMatch = (a.title ?? '').toLowerCase().includes(q)
+      return idMatch || titleMatch
+    })
+  }, [rawData, search])
 
   const paginationResponse: TPaginationResponse = useMemo(
     () => ({
-      total_items: data.length,
-      total_pages: 1,
-      page: 1,
-      limit: 10,
+      total_items: mockAlbumListResponse.meta.total_items,
+      total_pages: mockAlbumListResponse.meta.total_pages,
+      page: mockAlbumListResponse.meta.page,
+      limit: mockAlbumListResponse.meta.page_size,
     }),
-    [data.length]
-  )
-
-  const columns = useMemo(
-    () => [
-      { uid: 'name', name: 'Tên album', sortable: true },
-      { uid: 'totalFiles', name: 'Tổng tệp ảnh & video', sortable: true },
-      { uid: 'publishedAt', name: 'Ngày đăng', sortable: true },
-      { uid: 'actions', name: 'Action' },
-    ],
     []
   )
 
-  const [deleteTarget, setDeleteTarget] = useState<AlbumItem | null>(null)
-
-  const handleCreate = () => {
-    // bạn đổi route theo dự án của bạn
-    router.push('/admin/album-management/create')
+  const openCreate = () => {
+    setAlbumEdit(null)
+    setIsModalOpen(true)
   }
 
-  const handleEdit = (id: AlbumItem['id']) => {
-    router.push(`/admin/album-management/${id}/edit`)
+  const openEdit = (album: Album) => {
+    setAlbumEdit(album)
+    setIsModalOpen(true)
   }
 
-  const handleViewDetail = (id: AlbumItem['id']) => {
-    router.push(`/admin/album-management/${id}`)
+  const closeModal = () => setIsModalOpen(false)
+
+  const handleSubmitAlbum = async (args: {
+    isCreate: boolean
+    albumId?: Album['id']
+    payload: { title: string; description?: string; status: 'draft' | 'published' | 'archived' }
+    coverFile?: File | null
+    newFiles: File[]
+  }) => {
+    // TODO: khi có API thật thì thay bằng create/update
+    console.log('Album submitted:', args)
   }
 
-  const handleAskDelete = (item: AlbumItem) => {
-    setDeleteTarget(item)
-  }
-
-  const handleConfirmDelete = async () => {
-    if (!deleteTarget) return
-    // TODO: gọi API xóa album ở đây
-    // await albumApi.delete(deleteTarget.id)
-    setDeleteTarget(null)
-  }
-
-  const renderCell = (item: AlbumItem, columnKey: string) => {
-    switch (columnKey) {
-      case 'name':
-        return (
-          <div className='flex items-center gap-3'>
-            <div className='flex size-9 items-center justify-center rounded-lg bg-default-100'>
-              <ImageIcon className='size-4 text-default-600' />
-            </div>
-            <div className='min-w-0'>
-              <p className='truncate font-medium text-default-900'>{item.name}</p>
-              <p className='truncate text-xs text-default-500'>ID: {item.id}</p>
-            </div>
-          </div>
-        )
-
-      case 'totalFiles':
-        return (
-          <div className='flex items-center gap-2'>
-            <Chip size='sm' variant='flat' color='primary'>
-              {item.totalFiles}
-            </Chip>
-            <span className='text-default-600'>tệp</span>
-          </div>
-        )
-
-      case 'publishedAt':
-        return <span className='text-default-700'>{formatDateFallback(item.publishedAt)}</span>
-      // nếu bạn có formatDate thì thay dòng trên bằng:
-      // return <span className='text-default-700'>{formatDate(item.publishedAt)}</span>
-
-      case 'actions':
-        return (
-          <div className='flex justify-center'>
-            <Dropdown placement='bottom-end'>
-              <DropdownTrigger>
-                <Button isIconOnly variant='light' aria-label='More actions'>
-                  <MoreVertical className='size-4 text-default-600' />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label='Album actions'>
-                <DropdownItem
-                  key='edit'
-                  startContent={<Pencil className='size-4' />}
-                  onPress={() => handleEdit(item.id)}
-                >
-                  Chỉnh sửa
-                </DropdownItem>
-                <DropdownItem
-                  key='detail'
-                  startContent={<Eye className='size-4' />}
-                  onPress={() => handleViewDetail(item.id)}
-                >
-                  Xem chi tiết
-                </DropdownItem>
-                <DropdownItem
-                  key='delete'
-                  className='text-danger'
-                  color='danger'
-                  startContent={<Trash2 className='size-4' />}
-                  onPress={() => handleAskDelete(item)}
-                >
-                  Xóa album
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        )
-
-      default:
-        return '—'
-    }
+  const handleDelete = async (album: Album) => {
+    // TODO: gọi API xóa album thật
+    console.log('Album deleted:', album.id)
   }
 
   return (
-    <div className='w-full px-6 py-5'>
-      {/* Header */}
-      <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
-        <div>
-          <h1 className='text-lg font-semibold text-default-900'>Album</h1>
-          <p className='text-sm text-default-500'>Quản lý danh sách album ảnh & video</p>
-        </div>
-
-        <Button color='primary' startContent={<Plus className='size-4' />} onPress={handleCreate}>
-          Tạo mới album
-        </Button>
-      </div>
+    <section className='space-y-6'>
+      {/* Filter header */}
+      <AlbumManagementFilter
+        searchValue={search}
+        onSearchChange={setSearch}
+        onCreate={openCreate}
+      />
 
       {/* Table */}
-      <div className='rounded-xl bg-background p-3 shadow-sm'>
-        <CustomTable<AlbumItem>
-          tableKey='album-management-table'
-          columns={columns}
-          data={data}
+      <div className='mt-6'>
+        <AlbumManagementTable
+          data={filteredData}
           paginationResponse={paginationResponse}
-          renderCell={renderCell}
-          selectionMode='none' // Album quản lý theo row action, nên tắt selection cho gọn (bạn muốn bật cũng được)
-          tableClassNames={{
-            wrapper: 'h-[560px] pt-0 pb-4 px-0 bg-transparent shadow-none',
-            table: 'bg-transparent',
-          }}
+          onEdit={openEdit}
+          onDelete={handleDelete}
         />
       </div>
 
-      {/* Confirm delete */}
-      {deleteTarget && (
-        <ConfirmModal
-          modalHeader='Xóa album'
-          modalBody={`Bạn có chắc chắn muốn xóa album “${deleteTarget.name}” không?`}
-          confirmButtonText='Xóa'
-          cancelButtonText='Hủy'
-          isOpen={!!deleteTarget}
-          onClose={() => setDeleteTarget(null)}
-          // Nếu ConfirmModal của bạn có onConfirm thì mở dòng dưới, còn không thì bạn chỉnh theo props thực tế
-          onConfirm={handleConfirmDelete as any}
-        />
-      )}
-    </div>
+      {/* Modal Create/Edit */}
+      <ModalCreateEditAlbum
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        albumEdit={albumEdit}
+        onSubmit={handleSubmitAlbum}
+      />
+    </section>
   )
 }
