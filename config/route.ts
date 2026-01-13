@@ -18,6 +18,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'CHƯƠNG TRÌNH HỌC', href: '/program' },
   { label: 'HOẠT ĐỘNG', href: '/activities' },
   { label: 'THƯ VIỆN', href: '/library' },
-  { label: 'TRUC XINH CAFE', href: '/cafe' },
+  { label: 'ZONE-KID', href: '/play-cafe' },
   { label: 'LIÊN HỆ', href: '/contact' },
+  { label: 'VÌ SAO CHỌN TRÚC XINH', href: '/reason' },
 ]
