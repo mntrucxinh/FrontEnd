@@ -112,7 +112,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop nav */}
-          <nav className='hidden items-center gap-7 text-[15px] font-semibold text-primary lg:flex'>
+          <nav className="hidden lg:flex items-center font-semibold text-primary lg:gap-4 xl:gap-7 text-fluid-nav">
             {NAV_ITEMS.map((item) => {
               const isAnchor = item.href.startsWith('#')
               if (!item.children?.length) {
@@ -153,7 +153,7 @@ const Header = () => {
                   </div>
 
                   {/* Dropdown */}
-                  <div className='invisible absolute left-0 top-full mt-2 w-64 translate-y-2 rounded-2xl bg-white opacity-0 shadow-2xl ring-1 ring-[#33B54A]/20 transition-all duration-300 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100'>
+                  <div className='invisible absolute left-0 top-full mt-2 w-64 translate-y-2 rounded-2xl bg-white opacity-0 shadow-2xl ring-1 ring-[#33B54A]/20 text-fluid-nav transition-all duration-300 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100'>
                     <div className='py-2'>
                       {item.children.map((c) => (
                         <Link
