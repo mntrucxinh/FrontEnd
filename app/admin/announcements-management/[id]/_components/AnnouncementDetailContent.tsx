@@ -71,7 +71,7 @@ export default function AnnouncementDetailContent({
   const showMeta = Boolean(announcement.meta_title) || Boolean(announcement.meta_description)
   const [copied, setCopied] = useState(false)
 
-  const previewUrl = `/announcements/detail/${announcement.slug}`
+  const previewUrl = `/notice/${announcement.slug}`
 
   const handleCopySlug = async () => {
     try {

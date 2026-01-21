@@ -59,7 +59,7 @@ export default function NewsDetailContent({
   const showMeta = Boolean(news.meta_title) || Boolean(news.meta_description)
   const [copied, setCopied] = useState(false)
 
-  const previewUrl = `/news/detail/${news.slug}`
+  const previewUrl = `/activities/detail/${news.slug}`
 
   const handleCopySlug = async () => {
     try {

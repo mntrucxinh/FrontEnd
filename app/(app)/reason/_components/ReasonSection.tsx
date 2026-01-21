@@ -152,9 +152,9 @@ export default function ReasonSection() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{
-              duration: 0.7,
+              duration: 0.4,
               ease: [0.4, 0, 0.2, 1],
             }}
             className='mb-16 text-center md:mb-20'
@@ -163,7 +163,7 @@ export default function ReasonSection() {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
               className='mb-6 text-3xl font-black tracking-tight md:text-5xl lg:text-6xl'
             >
               <span className='text-[#33B54A]'>Những điểm khác biệt </span>
@@ -173,7 +173,7 @@ export default function ReasonSection() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
               className='mx-auto max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg'
             >
               Khám phá 10 điểm nổi bật tạo nên sự khác biệt và giá trị độc đáo của Trúc Xinh
@@ -198,8 +198,8 @@ export default function ReasonSection() {
                     key={index}
                     initial={{ opacity: 0, x: isLeft ? -60 : 60 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ delay: 0.2 + index * 0.08, duration: 0.7 }}
+                    viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+                    transition={{ delay: 0.1 + index * 0.03, duration: 0.4 }}
                     className='relative z-10 flex items-center'
                   >
                     <div className='flex w-full flex-col gap-6 md:flex-row md:items-center md:gap-0'>
@@ -395,8 +395,8 @@ export default function ReasonSection() {
                 key={actualIndex}
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ delay: 0.2, duration: 0.4 }}
                 className='relative z-10 mb-16 flex flex-col items-center'
               >
                 {/* Enhanced Timeline connection */}
@@ -479,8 +479,8 @@ export default function ReasonSection() {
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.7 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.15, duration: 0.4 }}
             className='mt-16'
           >
             <div className='relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#33B54A] via-[#2EA043] to-[#33B54A] p-10 shadow-2xl ring-2 ring-[#33B54A]/30 md:p-16'>
@@ -501,7 +501,7 @@ export default function ReasonSection() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
+                  transition={{ delay: 0.2, duration: 0.3 }}
                   className='mb-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-6 py-2 backdrop-blur-sm ring-2 ring-white/30'
                 >
                   <Heart className='size-5 text-white' />
