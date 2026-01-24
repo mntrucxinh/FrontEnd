@@ -14,14 +14,15 @@ import {
   ModalHeader,
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
-import { Upload, X } from 'lucide-react'
+import { Upload, X, FileText } from 'lucide-react'
+import { buildAssetUrl } from '@/utils/api-url'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import CustomInput from '../../../../components/CustomInput'
 import CustomSelect from '../../../../components/CustomSelect'
 import CustomTextArea from '../../../../components/CustomTextArea'
+import { useQueryClient } from '@tanstack/react-query'
 
 // ========== ZOD SCHEMA ==========
 const CreateEditNewsSchema = z.object({
@@ -52,6 +53,19 @@ interface ModalCreateEditNewsProps {
     meta_title?: string | null
     meta_description?: string | null
     files?: string[] | null
+    content_assets?: Array<{
+      position: number
+      caption?: string | null
+      asset: {
+        id: number | string
+        public_id: string
+        url: string
+        mime_type: string
+        byte_size?: number | null
+        width?: number | null
+        height?: number | null
+      }
+    }> | null
   }
 }
 
@@ -64,6 +78,14 @@ const ModalCreateEditNews = ({
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
   const [newFiles, setNewFiles] = useState<File[]>([])
+  const [existingFiles, setExistingFiles] = useState<
+    Array<{
+      id: number | string
+      url: string
+      mime_type: string
+      caption?: string | null
+    }>
+  >([])
 
   const defaultValues = useMemo(
     () => ({
@@ -118,10 +140,15 @@ const ModalCreateEditNews = ({
     setNewFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
+  const handleRemoveExistingFile = (id: number | string) => {
+    setExistingFiles((prev) => prev.filter((file) => file.id !== id))
+  }
+
   const handleClose = () => {
     reset(defaultValues)
     setNewFiles([])
     setPreviewUrls([])
+    setExistingFiles([])
     onClose()
   }
 
@@ -172,10 +199,43 @@ const ModalCreateEditNews = ({
     }
   }
 
+  // Load existing files when modal opens for editing
   useEffect(() => {
-    reset(defaultValues)
-    setNewFiles([])
-  }, [newsEdit, reset, defaultValues])
+    if (isOpen && !isCreateMode && newsEdit) {
+      // Reset new files when opening
+      setNewFiles([])
+      
+      // Load existing files
+      if (newsEdit.content_assets && Array.isArray(newsEdit.content_assets) && newsEdit.content_assets.length > 0) {
+        const files = newsEdit.content_assets
+          .sort((a, b) => (a.position || 0) - (b.position || 0))
+          .map((item) => ({
+            id: item.asset?.id || item.asset?.public_id,
+            url: item.asset?.url || '',
+            mime_type: item.asset?.mime_type || '',
+            caption: item.caption || null,
+          }))
+          .filter((file) => file.id && file.url) // Filter out invalid files
+        setExistingFiles(files)
+      } else {
+        setExistingFiles([])
+      }
+    } else if (isOpen && isCreateMode) {
+      // Reset for create mode
+      setExistingFiles([])
+      setNewFiles([])
+    } else if (!isOpen) {
+      // Clear when modal closes
+      setExistingFiles([])
+      setNewFiles([])
+    }
+  }, [isOpen, isCreateMode, newsEdit])
+
+  useEffect(() => {
+    if (isOpen) {
+      reset(defaultValues)
+    }
+  }, [isOpen, newsEdit, reset, defaultValues])
 
   return (
     <Modal
@@ -254,7 +314,7 @@ const ModalCreateEditNews = ({
                               onValueChange={field.onChange}
                               classNames={{ label: 'text-foreground' }}
                             >
-                              Đăng lên Facebook
+                              {isCreateMode ? 'Đăng lên Facebook' : 'Sửa trên Facebook'}
                             </Checkbox>
                           )}
                         />
@@ -314,43 +374,98 @@ const ModalCreateEditNews = ({
 
                     {/* Scroll preview */}
                     <div className='grid max-h-[44vh] grid-cols-3 gap-3 overflow-y-auto pr-1'>
-                      {newFiles.length === 0 ? (
-                        <div className='col-span-full rounded-xl border border-dashed p-6 text-center text-sm text-foreground/50'>
-                          Chưa có file mới.
-                        </div>
-                      ) : (
-                        newFiles.map((file, index) => (
+                      {/* Existing files */}
+                      {existingFiles.map((file) => {
+                        const assetUrl = buildAssetUrl(file.url)
+                        const isVideo = file.mime_type?.startsWith('video/')
+                        const isImage = file.mime_type?.startsWith('image/')
+
+                        return (
                           <div
-                            key={`${file.name}-${file.lastModified}`}
-                            className='relative aspect-square overflow-hidden rounded-xl border'
+                            key={file.id}
+                            className='relative aspect-square overflow-hidden rounded-xl border border-default-200 group'
                           >
-                            {file.type.startsWith('video') ? (
+                            {isVideo ? (
                               <video
-                                src={previewUrls[index]}
-                                className='size-full object-cover'
+                                src={assetUrl}
+                                className='h-full w-full object-cover'
                                 controls
+                                preload='metadata'
+                              />
+                            ) : isImage ? (
+                              <Image
+                                src={assetUrl}
+                                alt={file.caption || 'Existing file'}
+                                fill
+                                className='object-cover'
+                                unoptimized
                               />
                             ) : (
-                              <Image
-                                src={previewUrls[index]}
-                                alt='preview'
-                                className='size-full object-cover'
-                                loading='lazy'
-                                fill
-                              />
+                              <div className='h-full w-full bg-default-100 flex items-center justify-center'>
+                                <FileText className='size-8 text-default-400' />
+                              </div>
                             )}
 
                             <Button
-                              onPress={() => handleRemoveFile(index)}
+                              onPress={() => handleRemoveExistingFile(file.id as number | string)}
                               isIconOnly
                               color='danger'
                               radius='full'
-                              className='absolute right-2 top-2 size-6 min-w-0'
+                              className='absolute right-2 top-2 h-6 w-6 min-w-0 opacity-0 group-hover:opacity-100 transition-opacity'
                             >
                               <X className='size-4 text-white' />
                             </Button>
+                            {file.caption && (
+                              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5'>
+                                <p className='text-xs text-white truncate'>{file.caption}</p>
+                              </div>
+                            )}
                           </div>
-                        ))
+                        )
+                      })}
+
+                      {/* New files */}
+                      {newFiles.map((file, index) => (
+                        <div
+                          key={`new-${file.name}-${file.lastModified}`}
+                          className='relative aspect-square overflow-hidden rounded-xl border border-primary-200 group'
+                        >
+                          {file.type.startsWith('video') ? (
+                            <video
+                              src={previewUrls[index]}
+                              className='h-full w-full object-cover'
+                              controls
+                            />
+                          ) : (
+                            <img
+                              src={previewUrls[index]}
+                              alt='preview'
+                              className='h-full w-full object-cover'
+                              loading='lazy'
+                            />
+                          )}
+
+                          <div className='absolute top-1 left-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded'>
+                            Mới
+                          </div>
+
+                          <Button
+                            onPress={() => handleRemoveFile(index)}
+                            isIconOnly
+                            color='danger'
+                            radius='full'
+                            className='absolute right-2 top-2 h-6 w-6 min-w-0'
+                          >
+                            <X className='size-4 text-white' />
+                          </Button>
+                        </div>
+                      ))}
+
+                      {/* Empty state */}
+                      {existingFiles.length === 0 && newFiles.length === 0 && (
+                        <div className='col-span-full rounded-xl border border-dashed p-6 text-center text-sm text-foreground/50'>
+                          Chưa có file nào.
+                        </div>
                       )}
                     </div>
                   </div>

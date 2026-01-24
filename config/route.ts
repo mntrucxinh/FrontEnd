@@ -6,18 +6,19 @@ export type NavItem = {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'TRANG CHỦ', href: '/' },
-  { label: 'GIỚI THIỆU', href: '/introduce' },
-  { label: 'CHƯƠNG TRÌNH HỌC', href: '/program' },
-  { label: 'THÔNG BÁO', href: '/notice' },
-  { label: 'TIN TỨC', href: '/news' },
   {
-    label: 'THƯ VIỆN',
-    href: '#library',
+    label: 'GIỚI THIỆU',
+    href: '/introduce',
     children: [
-      { label: 'Hình ảnh', href: '/library/gallery' },
-      { label: 'Video', href: '/library/video' },
+      { label: 'GIỚI THIỆU CHUNG', href: '/introduce' },
+      { label: 'TẦM NHÌN - SỨ MỆNH', href: '/introduce/vision-mission' },
+      { label: 'CƠ SỞ VẬT CHẤT', href: '/introduce/infrastructure' },
     ],
   },
-  { label: 'TRUC XINH CAFE', href: '/cafe' },
+  { label: 'CHƯƠNG TRÌNH HỌC', href: '/program' },
+  { label: 'HOẠT ĐỘNG', href: '/activities' },
+  { label: 'THƯ VIỆN', href: '/library' },
+  { label: 'ZONE-KID', href: '/play-cafe' },
   { label: 'LIÊN HỆ', href: '/contact' },
+  { label: 'VÌ SAO CHỌN TRÚC XINH', href: '/reason' },
 ]

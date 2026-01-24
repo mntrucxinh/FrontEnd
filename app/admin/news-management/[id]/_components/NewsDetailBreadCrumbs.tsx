@@ -2,17 +2,17 @@ import CustomBreadCrumbs, { Crumb } from '@/components/CustomBreadCrumbs'
 
 type Props = {
   id: string | number
-  metaTitle: string
+  slug: string
 }
 
-export default function NewsDetailBreadCrumbs({ id, metaTitle }: Props) {
+export default function NewsDetailBreadCrumbs({ id, slug }: Props) {
   const crumbs: Crumb[] = [
     {
-      label: 'Quản lý tin tức',
+      label: 'Quản lý hoạt động',
       href: '/admin/news-management',
     },
     {
-      label: metaTitle,
+      label: slug,
     },
   ]
 

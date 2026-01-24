@@ -6,9 +6,9 @@ import { useSearchParams } from 'next/navigation'
 import { useDeleteAdminNews } from '@/hook/admin-news/use-admin-news-mutation'
 import { useAdminNewsList } from '@/hook/admin-news/use-admin-news-query'
 import type { TPaginationResponse } from '@/validators/index'
-import { addToast, Button, Chip } from '@heroui/react'
+import { addToast, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Pencil, Trash2 } from 'lucide-react'
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 
 import type { AdminNewsResponse, AdminNewsStatus } from '@/types/admin-news'
 import ConfirmModal from '@/components/ConfirmModal'
@@ -45,6 +45,7 @@ export default function NewsManagementTable() {
   const page = Number(searchParams.get('page')) || 1
   const limit = Number(searchParams.get('limit')) || 10
   const tab = searchParams.get('tab') || 'all'
+  const q = searchParams.get('q') || undefined
   const status =
     tab === 'draft' || tab === 'published' || tab === 'archived'
       ? (tab as AdminNewsStatus)
@@ -55,14 +56,16 @@ export default function NewsManagementTable() {
       page,
       pageSize: limit,
       status,
+      q,
     }),
-    [page, limit, status]
+    [page, limit, status, q]
   )
 
   const { data, isLoading } = useAdminNewsList(listParams)
   const { mutateAsync: deleteNews, isPending: isDeleting } = useDeleteAdminNews()
   const [editingNews, setEditingNews] = useState<AdminNewsResponse | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<AdminNewsResponse | null>(null)
+  const [deleteOnFacebook, setDeleteOnFacebook] = useState(false)
 
   const paginationResponse = useMemo(() => {
     if (!data?.meta) return undefined
@@ -80,24 +83,25 @@ export default function NewsManagementTable() {
     if (typeof detail === 'string') return detail
     if (Array.isArray(detail) && detail[0]?.msg) return detail[0].msg
     if (typeof detail?.message === 'string') return detail.message
-    return err?.response?.data?.message || err?.message || 'Co loi xay ra'
+    return err?.response?.data?.message || err?.message || 'Có lỗi xảy ra'
   }
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return
     try {
-      await deleteNews({ id: deleteTarget.id })
+      await deleteNews({ id: deleteTarget.id, delete_on_facebook: deleteOnFacebook })
       addToast({
         color: 'success',
         title: 'Thành công',
-        description: 'Xoa tin tuc thanh cong',
+        description: 'Xóa tin tức thành công',
       })
       queryClient.invalidateQueries({ queryKey: ['admin-news'] })
       setDeleteTarget(null)
+      setDeleteOnFacebook(false)
     } catch (error) {
       addToast({
         color: 'danger',
-        title: 'That bai',
+        title: 'Thất bại',
         description: getErrorMessage(error),
       })
     }
@@ -124,28 +128,53 @@ export default function NewsManagementTable() {
       case 'files':
         return <span className='text-default-500'>{item.content_assets?.length ?? 0}</span>
 
-      case 'actions':
+      case 'actions': {
+        const isRowDeleting = isDeleting && deleteTarget?.id === item.id
+        const isRowDisabled = isDeleting && !isRowDeleting
         return (
           <div className='flex items-center justify-center gap-2'>
-            <Button
-              size='sm'
-              variant='flat'
-              onPress={() => setEditingNews(item)}
-              startContent={<Pencil className='size-4' />}
-            >
-              Sua
-            </Button>
-            <Button
-              size='sm'
-              color='danger'
-              variant='light'
-              onPress={() => setDeleteTarget(item)}
-              startContent={<Trash2 className='size-4' />}
-            >
-              Xoa
-            </Button>
+            <Dropdown placement='bottom-end'>
+              <DropdownTrigger>
+                <Button
+                  size='sm'
+                  variant='light'
+                  isIconOnly
+                  isLoading={isRowDeleting}
+                  isDisabled={isRowDisabled}
+                  aria-label='Thao tác'
+                >
+                  <MoreVertical className='size-4' />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label='Thao tác'
+                onAction={(key) => {
+                  if (key === 'edit') {
+                    setEditingNews(item)
+                  } else if (key === 'delete') {
+                    setDeleteTarget(item)
+                  }
+                }}
+              >
+                <DropdownItem
+                  key='edit'
+                  startContent={<Pencil className='size-4' />}
+                >
+                  Sửa
+                </DropdownItem>
+                <DropdownItem
+                  key='delete'
+                  className='text-danger'
+                  color='danger'
+                  startContent={<Trash2 className='size-4' />}
+                >
+                  Xóa
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         )
+      }
 
       default:
         return '—'
@@ -161,17 +190,19 @@ export default function NewsManagementTable() {
         status: editingNews.status,
         meta_title: editingNews.meta_title ?? undefined,
         meta_description: editingNews.meta_description ?? undefined,
+        content_assets: editingNews.content_assets ?? [],
       }
     : undefined
 
   return (
-    <section className='mt-10'>
+    <section className='mt-4'>
       <CustomTable<AdminNewsResponse>
         tableClassNames={{
           tr: 'h-14',
           th: ['text-primary text-md bg-white', 'last:[border-start-end-radius:0px]'].join(' '),
-          wrapper: 'h-[520px] p-0',
+          wrapper: 'min-h-[400px] max-h-[600px] p-0',
         }}
+        hideTopContent
         selectionMode='none'
         columns={columns}
         data={data?.items ?? []}
@@ -190,15 +221,20 @@ export default function NewsManagementTable() {
 
       {deleteTarget && (
         <ConfirmModal
-          modalHeader='Xoa tin tuc'
-          modalBody={`Ban chac chan muon xoa "${deleteTarget.title}"?`}
-          confirmButtonText='Xac nhan'
-          cancelButtonText='Huy'
+          modalHeader='Xóa tin tức'
+          modalBody={`Bạn có chắc chắn muốn xóa "${deleteTarget.title}"?`}
+          confirmButtonText='Xác nhận'
+          cancelButtonText='Hủy'
           isOpen={Boolean(deleteTarget)}
-          onClose={() => setDeleteTarget(null)}
+          onClose={() => {
+            setDeleteTarget(null)
+            setDeleteOnFacebook(false)
+          }}
           onConfirm={handleConfirmDelete}
           isLoading={isDeleting}
           isDisabled={isDeleting}
+          deleteOnFacebook={deleteOnFacebook}
+          onDeleteOnFacebookChange={setDeleteOnFacebook}
         />
       )}
     </section>

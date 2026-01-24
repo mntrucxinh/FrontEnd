@@ -19,7 +19,7 @@ const getRoutesToPrefetch = () => {
   ])
   const routes = [...navRoutes, ...EXTRA_ROUTES]
 
-  return Array.from(new Set(routes)).filter((href) => href && !href.startsWith('#'))
+s  return Array.from(new Set(routes)).filter((href) => href && !href.startsWith('#'))
 }
 
 export default function RoutePrefetcher() {
