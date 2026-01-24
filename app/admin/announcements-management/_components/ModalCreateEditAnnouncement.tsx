@@ -1,6 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
+import {
+  useCreateAdminAnnouncement,
+  useUpdateAdminAnnouncement,
+} from '@/hook/admin-announcement/use-admin-announcement-mutation'
+import { buildAssetUrl } from '@/utils/api-url'
 import {
   addToast,
   Button,
@@ -12,21 +18,16 @@ import {
   ModalHeader,
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Upload, X, FileText } from 'lucide-react'
-import Image from 'next/image'
-import { buildAssetUrl } from '@/utils/api-url'
+import { useQueryClient } from '@tanstack/react-query'
+import { FileText, Upload, X } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useQueryClient } from '@tanstack/react-query'
+
+import type { BlockCode } from '@/types/admin-announcement'
 
 import CustomInput from '../../../../components/CustomInput'
 import CustomSelect from '../../../../components/CustomSelect'
 import CustomTextArea from '../../../../components/CustomTextArea'
-import {
-  useCreateAdminAnnouncement,
-  useUpdateAdminAnnouncement,
-} from '@/hook/admin-announcement/use-admin-announcement-mutation'
-import type { BlockCode } from '@/types/admin-announcement'
 
 // ========== ZOD SCHEMA ==========
 const CreateEditAnnouncementSchema = z.object({
@@ -211,9 +212,13 @@ const ModalCreateEditAnnouncement = ({
     if (isOpen && !isCreateMode && announcementEdit) {
       // Reset new files when opening
       setNewFiles([])
-      
+
       // Load existing files
-      if (announcementEdit.content_assets && Array.isArray(announcementEdit.content_assets) && announcementEdit.content_assets.length > 0) {
+      if (
+        announcementEdit.content_assets &&
+        Array.isArray(announcementEdit.content_assets) &&
+        announcementEdit.content_assets.length > 0
+      ) {
         const files = announcementEdit.content_assets
           .sort((a, b) => (a.position || 0) - (b.position || 0))
           .map((item) => ({
@@ -413,7 +418,7 @@ const ModalCreateEditAnnouncement = ({
                         return (
                           <div
                             key={file.id}
-                            className='relative aspect-square overflow-hidden rounded-xl border border-default-200 group'
+                            className='group relative aspect-square overflow-hidden rounded-xl border border-default-200'
                           >
                             {isVideo ? (
                               <video
@@ -431,7 +436,7 @@ const ModalCreateEditAnnouncement = ({
                                 unoptimized
                               />
                             ) : (
-                              <div className='size-full bg-default-100 flex items-center justify-center'>
+                              <div className='flex size-full items-center justify-center bg-default-100'>
                                 <FileText className='size-8 text-default-400' />
                               </div>
                             )}
@@ -441,13 +446,13 @@ const ModalCreateEditAnnouncement = ({
                               isIconOnly
                               color='danger'
                               radius='full'
-                              className='absolute right-2 top-2 size-6 min-w-0 opacity-0 group-hover:opacity-100 transition-opacity'
+                              className='absolute right-2 top-2 size-6 min-w-0 opacity-0 transition-opacity group-hover:opacity-100'
                             >
                               <X className='size-4 text-white' />
                             </Button>
                             {file.caption && (
-                              <div className='absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-1.5'>
-                                <p className='text-xs text-white truncate'>{file.caption}</p>
+                              <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-1.5'>
+                                <p className='truncate text-xs text-white'>{file.caption}</p>
                               </div>
                             )}
                           </div>
@@ -458,7 +463,7 @@ const ModalCreateEditAnnouncement = ({
                       {newFiles.map((file, index) => (
                         <div
                           key={`new-${file.name}-${file.lastModified}`}
-                          className='relative aspect-square overflow-hidden rounded-xl border border-primary-200 group'
+                          className='group relative aspect-square overflow-hidden rounded-xl border border-primary-200'
                         >
                           {file.type.startsWith('video') ? (
                             <video
@@ -467,7 +472,7 @@ const ModalCreateEditAnnouncement = ({
                               controls
                             />
                           ) : (
-                            <img
+                            <Image
                               src={previewUrls[index]}
                               alt='preview'
                               className='size-full object-cover'
@@ -475,7 +480,7 @@ const ModalCreateEditAnnouncement = ({
                             />
                           )}
 
-                          <div className='absolute top-1 left-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded'>
+                          <div className='absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-xs text-white'>
                             Mới
                           </div>
 
@@ -525,4 +530,3 @@ const ModalCreateEditAnnouncement = ({
 }
 
 export default ModalCreateEditAnnouncement
-
