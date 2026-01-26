@@ -15,10 +15,10 @@ export const NAV_ITEMS: NavItem[] = [
       { label: 'CƠ SỞ VẬT CHẤT', href: '/introduce/infrastructure' },
     ],
   },
+  { label: 'VÌ SAO CHỌN TRÚC XINH', href: '/reason' },
   { label: 'CHƯƠNG TRÌNH HỌC', href: '/program' },
   { label: 'HOẠT ĐỘNG', href: '/activities' },
   { label: 'THƯ VIỆN', href: '/library' },
-  { label: 'ZONE-KID', href: '/play-cafe' },
+  { label: 'TRÚC XINH ZONE-KID', href: '/play-cafe' },
   { label: 'LIÊN HỆ', href: '/contact' },
-  { label: 'VÌ SAO CHỌN TRÚC XINH', href: '/reason' },
 ]
