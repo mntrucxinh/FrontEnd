@@ -76,7 +76,7 @@ export default function TetFireworksPopup() {
 
     const spawnBurst = (x: number, y: number) => {
       const count = Math.floor(rand(40, 80))
-      const hue = Math.random() < 0.7 ? rand(35, 55) : rand(0, 20) // vàng / đỏ
+      const hue = rand(0, 360)
       for (let i = 0; i < count; i++) {
         const angle = rand(0, Math.PI * 2)
         const speed = rand(2, 6)
@@ -168,6 +168,7 @@ export default function TetFireworksPopup() {
           header: 'justify-center',
           body: 'text-center',
           footer: 'justify-center',
+          closeButton: 'z-[20] text-white hover:text-black/70',
         }}
       >
         <ModalContent className='relative overflow-hidden p-3'>
@@ -175,8 +176,8 @@ export default function TetFireworksPopup() {
             <Image
               src='/assets/images/dao.png'
               alt='Cây đào'
-              width={100}
-              height={100}
+              width={220}
+              height={220}
               className='pointer-events-none absolute -left-8 -top-4 w-44 -scale-x-100 opacity-90 md:w-52'
               priority
             />
@@ -210,8 +211,8 @@ export default function TetFireworksPopup() {
             <Image
               src='/assets/images/mai.png'
               alt='Cây đào'
-              width={100}
-              height={100}
+              width={220}
+              height={220}
               className='pointer-events-none absolute -bottom-8 -right-10 w-44 opacity-90 md:w-52'
               priority
             />
