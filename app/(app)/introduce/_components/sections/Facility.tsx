@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   GraduationCap,
   BookOpen,
@@ -12,9 +12,47 @@ import {
   TreePine,
   Bed,
   Building2,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from 'lucide-react'
 
+const facilityImages = [
+  '/assets/images/coso1.jpg',
+  '/assets/images/coso2.png',
+  '/assets/images/coso3.jpg',
+  '/assets/images/coso4.png',
+  '/assets/images/coso5.jpg',
+  '/assets/images/coso6.png',
+  '/assets/images/coso7.png',
+  '/assets/images/coso8.png',
+]
+
 export default function Facility() {
+  const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null)
+
+  // Get current image src from index
+  const activeImage = activeImageIndex !== null ? facilityImages[activeImageIndex] : null
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (activeImageIndex === null) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveImageIndex(null)
+      } else if (e.key === 'ArrowLeft') {
+        const prevIndex = activeImageIndex > 0 ? activeImageIndex - 1 : facilityImages.length - 1
+        setActiveImageIndex(prevIndex)
+      } else if (e.key === 'ArrowRight') {
+        const nextIndex = activeImageIndex < facilityImages.length - 1 ? activeImageIndex + 1 : 0
+        setActiveImageIndex(nextIndex)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeImageIndex])
   const facilities = [
     {
       icon: GraduationCap,
@@ -201,9 +239,9 @@ export default function Facility() {
           </motion.h3>
 
           <div className='grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4'>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            {facilityImages.map((src, index) => (
               <motion.div
-                key={i}
+                key={src}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -211,14 +249,15 @@ export default function Facility() {
                   type: 'spring',
                   stiffness: 100,
                   damping: 20,
-                  delay: 0.7 + i * 0.05,
+                  delay: 0.7 + (index + 1) * 0.05,
                 }}
                 whileHover={{ y: -8, scale: 1.05 }}
-                className='group relative h-48 overflow-hidden rounded-3xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl hover:ring-[#33B54A]/30 md:h-56'
+                className='group relative h-48 cursor-pointer overflow-hidden rounded-3xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl hover:ring-[#33B54A]/30 md:h-56'
+                onClick={() => setActiveImageIndex(index)}
               >
                 <Image
-                  src={`/assets/images/campus-${i}.jpg`}
-                  alt={`Cơ sở vật chất ${i}`}
+                  src={src}
+                  alt={`Cơ sở vật chất ${index + 1}`}
                   fill
                   className='object-cover transition-transform duration-700 group-hover:scale-110'
                 />
@@ -228,6 +267,80 @@ export default function Facility() {
           </div>
         </motion.div>
       </div>
+
+      {/* Image lightbox */}
+      <AnimatePresence>
+        {activeImage && activeImageIndex !== null && (
+          <motion.div
+            className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveImageIndex(null)}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setActiveImageIndex(null)}
+              className='absolute right-4 top-4 z-10 flex size-12 items-center justify-center rounded-full bg-black/50 text-white transition-all hover:bg-black/70 hover:scale-110'
+              aria-label='Đóng'
+            >
+              <X className='size-6' />
+            </button>
+
+            {/* Previous button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                const prevIndex = activeImageIndex > 0 ? activeImageIndex - 1 : facilityImages.length - 1
+                setActiveImageIndex(prevIndex)
+              }}
+              className='absolute left-4 top-1/2 z-10 flex size-14 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-all hover:bg-black/70 hover:scale-110'
+              aria-label='Ảnh trước'
+            >
+              <ChevronLeft className='size-8' />
+            </button>
+
+            {/* Next button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                const nextIndex = activeImageIndex < facilityImages.length - 1 ? activeImageIndex + 1 : 0
+                setActiveImageIndex(nextIndex)
+              }}
+              className='absolute right-4 top-1/2 z-10 flex size-14 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-all hover:bg-black/70 hover:scale-110'
+              aria-label='Ảnh sau'
+            >
+              <ChevronRight className='size-8' />
+            </button>
+
+            {/* Image counter */}
+            <div className='absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/50 px-4 py-2 text-sm text-white'>
+              {activeImageIndex + 1} / {facilityImages.length}
+            </div>
+
+            {/* Image container */}
+            <motion.div
+              key={activeImage}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+              className='relative max-h-[95vh] max-w-[95vw] overflow-hidden rounded-2xl bg-black/40 p-2 shadow-2xl'
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className='relative h-[90vh] w-[90vw] max-w-[90vw]'>
+                <Image
+                  src={activeImage}
+                  alt={`Cơ sở vật chất ${activeImageIndex + 1}`}
+                  fill
+                  className='object-contain'
+                  priority
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.section>
   )
 }

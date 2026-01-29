@@ -125,7 +125,7 @@ export default function Location() {
             }}
             className='grid grid-cols-3 gap-3 md:gap-4'
           >
-            {/* Small image - top left */}
+            {/* Small image - top left (to hơn một chút) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -137,10 +137,10 @@ export default function Location() {
                 delay: 0.2,
               }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className='group relative h-32 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-40'
+              className='group relative h-40 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-48'
             >
               <Image
-                src='/assets/images/campus-1.jpg'
+                src='/assets/images/khonggian3.png'
                 alt='Khuôn viên trường 1'
                 fill
                 className='object-cover transition-transform duration-500 group-hover:scale-110'
@@ -160,10 +160,10 @@ export default function Location() {
                 delay: 0.3,
               }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className='group relative col-span-2 row-span-2 h-64 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-80'
+              className='group relative col-span-2 row-span-2 h-56 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-72'
             >
               <Image
-                src='/assets/images/campus-2.jpg'
+                src='/assets/images/khonggian2.png'
                 alt='Khuôn viên trường 2'
                 fill
                 className='object-cover transition-transform duration-500 group-hover:scale-110'
@@ -183,10 +183,10 @@ export default function Location() {
                 delay: 0.4,
               }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className='group relative col-span-1 row-span-2 h-64 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-80'
+              className='group relative col-span-1 row-span-2 h-56 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-72'
             >
               <Image
-                src='/assets/images/campus-3.jpg'
+                src='/assets/images/khonggian1.png'
                 alt='Khuôn viên trường 3'
                 fill
                 className='object-cover transition-transform duration-500 group-hover:scale-110'
@@ -206,10 +206,10 @@ export default function Location() {
                 delay: 0.5,
               }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className='group relative col-span-2 h-32 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-40'
+              className='group relative col-span-2 h-40 overflow-hidden rounded-2xl shadow-xl ring-2 ring-gray-200/50 transition-all duration-300 hover:shadow-2xl md:h-48'
             >
               <Image
-                src='/assets/images/campus-4.jpg'
+                src='/assets/images/khonggian4.png'
                 alt='Khuôn viên trường 4'
                 fill
                 className='object-cover transition-transform duration-500 group-hover:scale-110'

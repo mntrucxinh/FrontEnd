@@ -44,7 +44,7 @@ export default function ActivitiesAtSchool() {
         key: '3-4',
         label: '3-4 tuổi',
         badge: 'Lớp Mouse (3-4 tuổi)',
-        img: '/assets/images/activities-34.jpg',
+        img: '/assets/images/mission1.jpg',
         schedule: [
           { time: '06h15–08h00', text: 'Đón trẻ, ăn sáng, thể dục sáng' },
           { time: '08h00–08h15', text: 'Uống sữa' },
@@ -69,7 +69,7 @@ export default function ActivitiesAtSchool() {
         key: '4-5',
         label: '4-5 tuổi',
         badge: 'Lớp Bear (4-5 tuổi)',
-        img: '/assets/images/activities-45.jpg',
+        img: '/assets/images/schule4.jpg',
         schedule: [
           { time: '06h15–08h00', text: 'Đón trẻ, ăn sáng, thể dục sáng' },
           { time: '08h00–08h15', text: 'Uống sữa' },
@@ -94,7 +94,7 @@ export default function ActivitiesAtSchool() {
         key: '5-6',
         label: '5-6 tuổi',
         badge: 'Lớp Dolphin (5-6 tuổi)',
-        img: '/assets/images/activities-56.jpg',
+        img: '/assets/images/schule3.jpg',
         schedule: [
           { time: '06h15–08h00', text: 'Đón trẻ, ăn sáng, thể dục sáng' },
           { time: '08h00–08h15', text: 'Uống sữa' },
@@ -281,7 +281,7 @@ export default function ActivitiesAtSchool() {
                     src={current.img}
                     alt={current.badge}
                     fill
-                    className='object-cover'
+                    className='object-cover object-[center_60%]'
                     priority
                   />
                   <div className='absolute inset-0 bg-gradient-to-t from-black/25 via-black/5 to-transparent' />

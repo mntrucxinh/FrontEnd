@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 
-const IMAGES = ['/assets/images/ex1.jpg', '/assets/images/ex2.jpg', '/assets/images/ex3.jpg']
+const IMAGES = ['/assets/images/khonggian2.png', '/assets/images/ex2.jpg', '/assets/images/ex1.jpg']
 
 export default function ImageInstruction() {
   const router = useRouter()
