@@ -90,7 +90,7 @@ export default function StaffTeam() {
           >
             <div className='relative h-96 md:h-[500px]'>
               <Image
-                src='/assets/images/staff-team.jpg'
+                src='/assets/images/giaovien.jpg'
                 alt='Đội ngũ cán bộ nhà trường'
                 fill
                 className='object-cover transition-transform duration-700 group-hover:scale-105'

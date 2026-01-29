@@ -46,12 +46,25 @@ const features = [
 ]
 
 const galleryImages = [
-  '/assets/images/cafe-1.jpg',
-  '/assets/images/cafe-2.jpg',
-  '/assets/images/cafe-3.jpg',
-  '/assets/images/cafe-4.jpg',
-  '/assets/images/cafe-5.jpg',
-  '/assets/images/cafe-6.jpg',
+  '/assets/images/trucxinh1.png',
+  '/assets/images/trucxinh2.jpg',
+  '/assets/images/trucxinh3.jpg',
+  '/assets/images/trucxinh4.jpg',
+  '/assets/images/trucxinh5.png',
+  '/assets/images/trucxinh6.png',
+]
+
+const galleryItemLayout = [
+  // Mobile: big hero (2x2). Desktop: 7/12 wide, 2 rows tall
+  'col-span-2 row-span-2 md:col-span-7 md:row-span-2',
+  // Desktop right column (top)
+  'col-span-1 row-span-1 md:col-span-5 md:row-span-1',
+  // Desktop right column (bottom)
+  'col-span-1 row-span-1 md:col-span-5 md:row-span-1',
+  // Desktop bottom row (3 equal tiles)
+  'col-span-1 row-span-1 md:col-span-4 md:row-span-1',
+  'col-span-1 row-span-1 md:col-span-4 md:row-span-1',
+  'col-span-1 row-span-1 md:col-span-4 md:row-span-1',
 ]
 
 export default function CafeSection() {
@@ -322,7 +335,7 @@ export default function CafeSection() {
               className='relative h-80 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-gray-200/50 md:h-96'
             >
               <Image
-                src='/assets/images/cafe-main.jpg'
+                src='/assets/images/trucxinhcong.png'
                 alt='Trúc Xinh Zone'
                 fill
                 className='object-cover'
@@ -479,7 +492,7 @@ export default function CafeSection() {
                 </div>
                 <div className='relative h-64 overflow-hidden rounded-2xl shadow-xl md:h-80'>
                   <Image
-                    src='/assets/images/cafe-birthday.jpg'
+                    src='/assets/images/phonghop.png'
                     alt='Phòng tổ chức sinh nhật'
                     fill
                     className='object-cover'
@@ -612,7 +625,7 @@ export default function CafeSection() {
             </p>
           </motion.div>
 
-          <div className='mx-auto grid max-w-6xl grid-cols-2 gap-3 md:grid-cols-3 md:gap-4'>
+          <div className='mx-auto grid max-w-6xl grid-cols-2 auto-rows-[140px] gap-3 md:grid-cols-12 md:auto-rows-[180px] md:gap-4'>
             {galleryImages.map((image, index) => (
               <motion.div
                 key={image}
@@ -622,14 +635,15 @@ export default function CafeSection() {
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ y: -8, scale: 1.02 }}
                 className={`group relative overflow-hidden rounded-2xl shadow-xl ring-1 ring-gray-200/50 transition-all hover:shadow-2xl ${
-                  index === 0 || index === 3 ? 'col-span-2 md:col-span-1' : ''
-                } ${index === 0 ? 'md:row-span-2' : ''}`}
+                  galleryItemLayout[index] ?? 'col-span-1 row-span-1 md:col-span-4 md:row-span-1'
+                }`}
               >
-                <div className='relative h-48 md:h-64 lg:h-80'>
+                <div className='relative size-full'>
                   <Image
                     src={image}
                     alt={`Trúc Xinh Zone gallery ${index + 1}`}
                     fill
+                    sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                     className='object-cover transition-transform duration-500 group-hover:scale-110'
                   />
                   <div className='absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
