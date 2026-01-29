@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
 import { useTheme } from 'next-themes'
 
 type Particle = {
@@ -19,7 +20,6 @@ type Particle = {
 function rand(min: number, max: number) {
   return Math.random() * (max - min) + min
 }
-
 function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v))
 }
@@ -64,10 +64,10 @@ export default function TetFireworksPopup() {
     resize()
     window.addEventListener('resize', resize)
 
-    // ====== MÀU NỀN TẾT ======
-    const baseR = 90
-    const baseG = 0
-    const baseB = 10
+    // nền đỏ tết
+    const baseR = 90,
+      baseG = 0,
+      baseB = 10
 
     const fillBackground = (alpha: number) => {
       ctx.fillStyle = `rgba(${baseR},${baseG},${baseB},${alpha})`
@@ -76,8 +76,7 @@ export default function TetFireworksPopup() {
 
     const spawnBurst = (x: number, y: number) => {
       const count = Math.floor(rand(40, 80))
-      // thiên về vàng/đỏ cho "Tết"
-      const hue = Math.random() < 0.7 ? rand(35, 55) : rand(0, 20) // vàng hoặc đỏ
+      const hue = Math.random() < 0.7 ? rand(35, 55) : rand(0, 20) // vàng / đỏ
       for (let i = 0; i < count; i++) {
         const angle = rand(0, Math.PI * 2)
         const speed = rand(2, 6)
@@ -95,11 +94,11 @@ export default function TetFireworksPopup() {
       }
     }
 
-    // clear nền ban đầu (đỏ tết)
+    // nền ban đầu
     fillBackground(1)
 
     const tick = (t: number) => {
-      // trail (đỏ cùng tông, không bị tối thành đen)
+      // trail
       fillBackground(0.16)
 
       const spawnEvery = 520
@@ -151,37 +150,53 @@ export default function TetFireworksPopup() {
   if (!open) return null
 
   return (
-    <div className='fixed inset-0 z-[9999]'>
-      {/* overlay trong suốt */}
-      <div className='absolute inset-0 bg-transparent' />
-
-      {/* canvas fireworks */}
-      <canvas ref={canvasRef} className='absolute inset-0' />
-
-      {/* content */}
-      <div className='pointer-events-none absolute inset-0 flex items-center justify-center p-4'>
-        <div className='pointer-events-auto w-full max-w-xl rounded-3xl border border-white/20 bg-white/10 p-6 text-center shadow-2xl backdrop-blur-md'>
-          <div className='text-xl font-extrabold text-white md:text-4xl'>Chúc Mừng Năm Mới</div>
-          <div className='mt-3 text-sm text-white/90 md:text-lg'>
-            Năm mới bình an — vạn sự như ý!
-          </div>
-          <Image
-            src='/assets/images/mualan.gif'
-            alt='Tết'
-            width={200}
-            height={200}
-            className='mx-auto mt-4'
-          />
-          <div className='mt-6 flex items-center justify-center'>
-            <button
-              onClick={() => setOpen(false)}
-              className='rounded-2xl bg-white px-5 py-2.5 font-semibold text-black transition hover:bg-white/90 active:bg-white/80'
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
+    <>
+      {/* Canvas: để z thấp + pointer-events-none để không chặn modal */}
+      <div className='pointer-events-none fixed inset-0 z-[9000]'>
+        <canvas ref={canvasRef} className='absolute inset-0' />
       </div>
-    </div>
+
+      {/* Modal: nâng z cao hơn canvas */}
+      <Modal
+        isOpen={open}
+        onOpenChange={setOpen}
+        placement='center'
+        backdrop='transparent'
+        classNames={{
+          wrapper: 'z-[9999]',
+          base: 'bg-white/10 backdrop-blur-md border border-white/20 text-white',
+          header: 'justify-center',
+          body: 'text-center',
+          footer: 'justify-center',
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                <div className='w-full text-center text-xl font-extrabold md:text-4xl'>
+                  Chúc Mừng Năm Mới
+                </div>
+              </ModalHeader>
+
+              <ModalBody>
+                <div className='text-sm text-white/90 md:text-lg'>
+                  Năm mới bình an — vạn sự như ý!
+                </div>
+
+                <Image
+                  src='/assets/images/mualan.gif'
+                  alt='Tết'
+                  width={200}
+                  height={200}
+                  className='mx-auto mt-4'
+                  priority
+                />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
