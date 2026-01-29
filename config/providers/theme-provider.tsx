@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from 'react'
 import { ThemeProvider } from 'next-themes'
+import TetFireworksPopup from '@/components/TetFireworksPopup'
 
 type Theme =
   | 'tet'
@@ -73,6 +74,7 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
       forcedTheme={forcedTheme}
       disableTransitionOnChange
     >
+      <TetFireworksPopup />
       {children}
     </ThemeProvider>
   )
